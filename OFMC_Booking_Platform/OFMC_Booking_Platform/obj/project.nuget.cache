@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "6I2lX0zr2y8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Saba\\source\\repos\\OFMC_Appointment-Booking-Platform\\OFMC_Booking_Platform\\OFMC_Booking_Platform\\OFMC_Booking_Platform.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Saba\\.nuget\\packages\\microsoft.net.sdk.compilers.toolset\\9.0.200\\microsoft.net.sdk.compilers.toolset.9.0.200.nupkg.sha512"
+  ],
+  "logs": []
+}
