@@ -1,0 +1,59 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model AppointmentViewModel
+
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<h1 class="display-4">Book your appointment</h1>
+
+<p><strong>Book your appointment with @Model.ActiveDoctor.DoctorName</strong></p>
+
+<form asp-controller="Healthcare" asp-action="RescheduleAppointment" asp-route-id="@Model.ActiveAppointment.AppointmentId" method="post" enctype="application/x-www-form-urlencoded">
+
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+
+    <input type="hidden" asp-for="ActiveDoctor.DoctorId" />
+
+    <input type="hidden" asp-for="ActiveAppointment.AppointmentId" />
+    <input type="hidden" asp-for="ActiveAppointment.PatientName" />
+    <input type="hidden" asp-for="ActiveAppointment.AppointmentEmail" />
+    <input type="hidden" asp-for="ActiveAppointment.ContactMethod" />
+    <input type="hidden" asp-for="ActiveAppointment.Notes" />
+
+    <div class="form-group">
+        <label asp-for="ActiveAppointment.PatientName">Patient Name</label>
+        <input type="text" asp-for="ActiveAppointment.PatientName" class="form-control" disabled />
+    </div>
+
+
+
+    <div class="form-group">
+        <label asp-for="ActiveAppointment.AppointmentDate">Date of party</label>
+        <input type="datetime-local" asp-for="ActiveAppointment.AppointmentDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveAppointment.AppointmentEmail">Email Address</label>
+        <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" disabled />
+    </div>
+
+    <div class="form-group">
+        What is your preferred method of contact?
+        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Email)" checked="" disabled />
+        <label>  Email  </label>
+        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Phone)" />
+        <label>  Phone  </label>
+        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Text)" />
+        <label>  Text  </label>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveAppointment.Notes">Please describe the reason for your visit</label>
+        <input type="text" asp-for="ActiveAppointment.Notes" class="form-control" disabled />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,36 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model List<Appointment>
+
+
+@{
+    ViewData["Title"] = "All Appointments";
+}
+
+<p>
+    <h1 class="display-4">All my appointments</h1>
+
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Appointment Date</th>
+                <th>Doctor Name</th>
+                <th>Specialty</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Appointment appointment in Model)
+            {
+                <tr>
+                    <td>@appointment.AppointmentDate</td>
+                    <td>@appointment.Doctor.DoctorName</td>
+                    <td>@appointment.Doctor.DoctorSpecialty</td>
+                    <td>
+                        <a asp-controller="Healthcare" asp-action="GetRescheduleAppointmentForm" asp-route-id="@appointment.AppointmentId">Reschedule</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</p>

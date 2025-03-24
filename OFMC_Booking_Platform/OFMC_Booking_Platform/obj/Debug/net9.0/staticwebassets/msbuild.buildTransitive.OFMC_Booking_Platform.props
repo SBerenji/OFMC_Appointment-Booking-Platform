@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\OFMC_Booking_Platform.props" />
+</Project>
