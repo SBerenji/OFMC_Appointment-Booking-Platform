@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\OFMC_Booking_Platform.props" />
+</Project>

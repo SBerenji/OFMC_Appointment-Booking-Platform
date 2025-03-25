@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OFMC_Booking_Platform")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6518f050e43c6c80cbf0a55fd5636c9579df0b5c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fbda2ced600b329a9fbcbc4b1e49fbb5fa4e224")]
 [assembly: System.Reflection.AssemblyProductAttribute("OFMC_Booking_Platform")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OFMC_Booking_Platform")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
