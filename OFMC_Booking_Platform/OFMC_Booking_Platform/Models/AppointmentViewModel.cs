@@ -10,5 +10,7 @@ namespace OFMC_Booking_Platform.Models
 
         public Patient? ActivePatient { get; set; }
 
+        public List<Availability>? Availability { get; set; } = new List<Availability>();
+
     }
 }

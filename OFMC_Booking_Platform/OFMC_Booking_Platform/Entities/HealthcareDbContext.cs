@@ -10,6 +10,9 @@ namespace OFMC_Booking_Platform.Entities
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<Patient> Patient { get; set; }
+        public DbSet<Availability> Availability { get; set; }
+
+
 
 
 
@@ -36,6 +39,18 @@ namespace OFMC_Booking_Platform.Entities
                 new Patient() { PatientId = 1, FirstName = "Sierra", LastName="Erb", DOB= new DateTime(2022, 12, 31, 12, 0, 0), Password="password", PatientEmail="sierraerb25@gmail.com" }
                );
 
+            // Seeds data into the Party table 
+            modelBuilder.Entity<Availability>().HasData(
+                new Availability() { SlotId = 1, DoctorId = 1, SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 2, DoctorId = 1, SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 3, DoctorId = 1, SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 4, DoctorId = 2, SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 5, DoctorId = 2, SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 6, DoctorId = 2, SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 7, DoctorId = 3, SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 8, DoctorId = 3, SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 9, DoctorId = 3, SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0), IsBooked = false }
+                );
 
         }
     }

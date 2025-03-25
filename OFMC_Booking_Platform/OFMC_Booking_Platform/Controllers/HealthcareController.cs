@@ -42,14 +42,19 @@ namespace OFMC_Booking_Platform.Controllers
         public IActionResult GetAppointmentForm(int id)
         {
             // tries to find doctor with the id from the database
-            Doctor? doctor = _healthcareDbContext.Doctor.Find(id);
+            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == id).FirstOrDefault();
 
+            //makes a list of available slots for that doctor
+            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == id).Where(a => !a.IsBooked)
+                .OrderBy(a => a.SlotDateTime)
+                .ToList();
 
 
             // populates the appointmentViewModel with the existing doctor info 
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
             {
                 ActiveDoctor = doctor,
+                Availability = availableSlots,
                 ActiveAppointment = new Appointment()
             };
 
@@ -62,14 +67,20 @@ namespace OFMC_Booking_Platform.Controllers
         public IActionResult GetRescheduleAppointmentForm(int id)
         {
             // tries to find appointment and doctor with the id from the database
-            Appointment? appointment = _healthcareDbContext.Appointment.Find(id);
-            Doctor? doctor = _healthcareDbContext.Doctor.Find(appointment.DoctorId);
+            Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == id).FirstOrDefault();
+            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+
+            //gets list of available slots for that doctor
+            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
+                .OrderBy(a => a.SlotDateTime)
+                .ToList();
 
             // populates the appointmentViewModel with the existing appointment info and doctor
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
             {
                 ActiveDoctor = doctor,
                 ActiveAppointment = appointment,
+                Availability = availableSlots
             };
 
             // return that appointmentViewModel to the view
@@ -78,38 +89,81 @@ namespace OFMC_Booking_Platform.Controllers
 
         //POST handler that enables adding a appointment 
         [HttpPost("/doctor/book-appointment")]
-        public IActionResult BookAppointment(AppointmentViewModel appointmentViewModel, int appointmentSlot)
+        public IActionResult BookAppointment(AppointmentViewModel appointmentViewModel)
         {
+            
+            //retrieves doctor id, and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
-            appointmentViewModel.ActiveAppointment.PatientId = 1;
+            appointmentViewModel.ActiveAppointment.PatientId = 1; //set to 1 for now until we have different patients 
 
             if (ModelState.IsValid) //enter this if model state is valid 
             {
+                //Get the selected slot from the database
+                Availability? selectedSlot = _healthcareDbContext.Availability.Where(a => a.SlotDateTime == appointmentViewModel.ActiveAppointment.AppointmentDate).Where(a=> a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
+
+                selectedSlot.IsBooked = true; // Mark the slot as booked
+                
                 _healthcareDbContext.Appointment.Add(appointmentViewModel.ActiveAppointment);   // add the appointment information in the database 
 
                 _healthcareDbContext.SaveChanges(); // saves the changes to the database
-
-
-
+                
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllDoctors", "Healthcare");
             }
             else
             {
-                return View("../Healthcare/BookAppointment", appointmentViewModel);  // model is invalid so show errors and load the Add view
+                // tries to find doctor with the id from the database
+                Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
+
+                //makes a list of available slots for that doctor
+                List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).Where(a => !a.IsBooked)
+                    .OrderBy(a => a.SlotDateTime)
+                    .ToList();
+
+
+                // populates the appointmentViewModel with the existing doctor info 
+                AppointmentViewModel newappointmentViewModel = new AppointmentViewModel()
+                {
+                    ActiveDoctor = doctor,
+                    Availability = availableSlots,
+                    ActiveAppointment = new Appointment()
+                };
+
+                return View("../Healthcare/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
             }
         }
 
         [HttpPost("/doctor/reschedule-appointment")]
         public IActionResult RescheduleAppointment(AppointmentViewModel appointmentViewModel)
         {
+            //Load the existing appointment from the database based on the id
+            Appointment? existingAppointment = _healthcareDbContext.Appointment.Where(a => a.AppointmentId == appointmentViewModel.ActiveAppointment.AppointmentId).FirstOrDefault();
+            
+            //set the doctor id and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
-            appointmentViewModel.ActiveAppointment.PatientId = 1;
+            appointmentViewModel.ActiveAppointment.PatientId = 1; //set to 1 for now since we only have 1 patient
 
 
             if (ModelState.IsValid) //enter this if model state is valid 
             {
-                _healthcareDbContext.Appointment.Update(appointmentViewModel.ActiveAppointment);   // update the appointment information in the database 
+                //Load the previously selected slot from the database
+                Availability? previousSlot = _healthcareDbContext.Availability
+                    .FirstOrDefault(a => a.SlotDateTime == existingAppointment.AppointmentDate
+                    && a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId);
+
+
+                previousSlot.IsBooked = false; // Mark the slot as not booked - free it up
+
+                //Load the currently selected slot from the database
+                Availability? selectedSlot = _healthcareDbContext.Availability
+                    .FirstOrDefault(a => a.SlotDateTime == appointmentViewModel.ActiveAppointment.AppointmentDate
+                    && a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId);
+
+
+                selectedSlot.IsBooked = true; // Mark the slot as booked
+
+                //change the existing appointment date to the newly selected date
+                existingAppointment.AppointmentDate = selectedSlot.SlotDateTime;
 
                 _healthcareDbContext.SaveChanges(); // saves the changes to the database
 
@@ -119,7 +173,24 @@ namespace OFMC_Booking_Platform.Controllers
             }
             else
             {
-                return View("../Healthcare/RescheduleAppointment", appointmentViewModel);  // model is invalid so show errors and load the Edit view
+                // tries to find appointment and doctor with the id from the database
+                Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == appointmentViewModel.ActiveAppointment.AppointmentId).FirstOrDefault();
+                Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+
+                //gets list of available slots for that doctor
+                List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
+                    .OrderBy(a => a.SlotDateTime)
+                    .ToList();
+
+                // populates the appointmentViewModel with the existing appointment info and doctor
+                AppointmentViewModel newappointmentViewModel = new AppointmentViewModel()
+                {
+                    ActiveDoctor = doctor,
+                    ActiveAppointment = appointment,
+                    Availability = availableSlots
+                };
+
+                return View("../Healthcare/RescheduleAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Edit view
             }
         }
 

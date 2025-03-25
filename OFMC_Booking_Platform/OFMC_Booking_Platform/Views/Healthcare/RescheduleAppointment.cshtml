@@ -5,9 +5,9 @@
     ViewData["Title"] = "Book Appointment";
 }
 
-<h1 class="display-4">Book your appointment</h1>
+<h1 class="display-4">Reschedule your appointment</h1>
 
-<p><strong>Book your appointment with @Model.ActiveDoctor.DoctorName</strong></p>
+<p><strong>Reschedule your appointment with @Model.ActiveDoctor.DoctorName</strong></p>
 
 <form asp-controller="Healthcare" asp-action="RescheduleAppointment" asp-route-id="@Model.ActiveAppointment.AppointmentId" method="post" enctype="application/x-www-form-urlencoded">
 
@@ -27,11 +27,22 @@
         <input type="text" asp-for="ActiveAppointment.PatientName" class="form-control" disabled />
     </div>
 
-
-
     <div class="form-group">
-        <label asp-for="ActiveAppointment.AppointmentDate">Date of party</label>
-        <input type="datetime-local" asp-for="ActiveAppointment.AppointmentDate" class="form-control" />
+        <label asp-for="ActiveAppointment.AppointmentDate">Select an Available Time Slot</label>
+        <select asp-for="ActiveAppointment.AppointmentDate" class="form-control">
+            @if (Model.Availability != null && Model.Availability.Any())
+            {
+                @foreach (var slot in Model.Availability)
+                {
+                    <option value="@slot.SlotDateTime">@slot.SlotDateTime.ToString("f")</option>
+                }
+            }
+            else
+            {
+                <option value="">No available slots</option>
+            }
+        </select>
+
     </div>
 
     <div class="form-group">

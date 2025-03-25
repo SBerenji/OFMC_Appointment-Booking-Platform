@@ -25,8 +25,21 @@
 
 
     <div class="form-group">
-        <label asp-for="ActiveAppointment.AppointmentDate">Date of party</label>
-        <input type="datetime-local" asp-for="ActiveAppointment.AppointmentDate" class="form-control" />
+        <label asp-for="ActiveAppointment.AppointmentDate">Select an Available Time Slot</label>
+        <select asp-for="ActiveAppointment.AppointmentDate" class="form-control">
+            @if (Model.Availability != null && Model.Availability.Any())
+            {
+                @foreach (var slot in Model.Availability)
+                {
+                    <option value="@slot.SlotDateTime">@slot.SlotDateTime.ToString("f")</option>
+                }
+            }
+            else
+            {
+                <option value="">No available slots</option>
+            }
+        </select>
+    
     </div>
 
     <div class="form-group">
