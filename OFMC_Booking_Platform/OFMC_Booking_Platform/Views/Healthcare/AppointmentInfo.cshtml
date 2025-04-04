@@ -1,0 +1,27 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model Appointment
+
+@{
+    ViewData["Title"] = "Appointment Info";
+}
+
+<a asp-controller="Healthcare" asp-action="GetAllAppointments" >Return to Appointments</a>
+
+<h1 class="display-4">Appointment Info</h1>
+
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <p><strong>Patient name:</strong> @Model.PatientName</p>
+        <p><strong>Appointment date and time:</strong> @Model.AppointmentDate</p>
+        <p><strong>Preferred method of contact:</strong> @Model.ContactMethod</p>
+        <p><strong>Email address:</strong> @Model.AppointmentEmail</p>
+        <p><strong>Patient reason for visit:</strong> @Model.Notes</p>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <p><strong>Doctor:</strong> @Model.Doctor.DoctorName</p>
+        <p><strong>Specialty:</strong> @Model.Doctor.DoctorSpecialty</p>
+        <p><strong>Address:</strong> 1347 Willow Creek Rd, Maplewood, ON</p>
+        <p><strong>Phone:</strong> (555) 987-6543 (EXT. @Model.Doctor.DoctorExt)</p>
+    </div>
+</div>
+
