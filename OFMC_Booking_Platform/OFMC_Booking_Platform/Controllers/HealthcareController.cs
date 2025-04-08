@@ -21,8 +21,10 @@ namespace OFMC_Booking_Platform.Controllers
             //retrieves a list of doctors from the database
             List<Doctor> doctors = _healthcareDbContext.Doctor.ToList();
 
-            return View("../Healthcare/Manage", doctors);  //returns the list of doctors to the view using the view name
+            return View("../Patient/Manage", doctors);  //returns the list of doctors to the view using the view name
         }
+
+
 
         // GET handler for the list of all of the appointments
         [HttpGet("/appointments")] //specifies the URL - GET handler for the list of all of the appointments
@@ -33,7 +35,7 @@ namespace OFMC_Booking_Platform.Controllers
                 .Include(m => m.Doctor) // Include the related Doctor data
                 .ToList();
 
-            return View("../Healthcare/Appointments", appointments);  //returns the list of appointments to the view using the view name
+            return View("../Patient/Appointments", appointments);  //returns the list of appointments to the view using the view name
         }
 
 
@@ -59,7 +61,7 @@ namespace OFMC_Booking_Platform.Controllers
             };
 
             // return that appointmentViewModel to the view
-            return View("../Healthcare/BookAppointment", appointmentViewModel);
+            return View("../Patient/BookAppointment", appointmentViewModel);
         }
 
 
@@ -84,7 +86,7 @@ namespace OFMC_Booking_Platform.Controllers
             };
 
             // return that appointmentViewModel to the view
-            return View("../Healthcare/RescheduleAppointment", appointmentViewModel);
+            return View("../Patient/RescheduleAppointment", appointmentViewModel);
         }
 
         //POST handler that enables adding a appointment 
@@ -129,7 +131,7 @@ namespace OFMC_Booking_Platform.Controllers
                     ActiveAppointment = new Appointment()
                 };
 
-                return View("../Healthcare/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
+                return View("../Patient/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
             }
         }
 
@@ -190,7 +192,7 @@ namespace OFMC_Booking_Platform.Controllers
                     Availability = availableSlots
                 };
 
-                return View("../Healthcare/RescheduleAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Edit view
+                return View("../Patient/RescheduleAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Edit view
             }
         }
 
