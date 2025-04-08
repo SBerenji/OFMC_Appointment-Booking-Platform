@@ -1,0 +1,22 @@
+﻿@model OFMC_Booking_Platform.Entities.Appointment
+@{
+    ViewData["Title"] = "Appointment Cancellation";
+}
+
+<div class="container my-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h4>Are you sure you want to cancel your appointment with @Model.Doctor.DoctorName on @Model.AppointmentDate?.ToString("MMMM dd, yyyy") at @Model.AppointmentDate?.ToString("tt")?</h4>
+
+            <div class="d-flex justify-content-center mt-4">
+                <form method="post" asp-controller="Healthcare" asp-action="CancelAppointment" asp-route-id="@Model.AppointmentId" class="d-flex gap-3">
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                    <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-secondary">No</a>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="~/Images/Calendar.png" alt="Calendar" class="img-fluid" />
+        </div>
+    </div>
+</div>
