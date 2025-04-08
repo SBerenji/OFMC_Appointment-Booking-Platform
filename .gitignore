@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+appsettings.Development.json
+/OFMC_Booking_Platform/OFMC_Booking_Platform/appsettings.Development.json

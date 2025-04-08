@@ -1,0 +1,44 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model List<Doctor>
+
+@{
+    ViewData["Title"] = "Doctors List";
+}
+
+<div class="container mt-3">
+
+    <div class="d-flex justify-content-end mb-3">
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-secondary">Log Out</button>
+        </form>
+    </div>
+
+    <h6 class="display-4">Physician List for Oakridge Family Medical Center</h6>
+
+    <table class="table table-bordered table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Physician Name</th>
+                <th>Specialty</th>
+                <th>Ext.</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Doctor doctor in Model)
+            {
+                <tr>
+                    <td>@doctor.DoctorName</td>
+                    <td>@doctor.DoctorSpecialty</td>
+                    <td>@doctor.DoctorExt</td>
+                    <td>
+                        <a asp-controller="Admin" asp-action="GetDoctorAppointments" asp-route-id="@doctor.DoctorId"
+                           class="btn btn-success btn-sm">
+                            View Scheduled Appointments
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
