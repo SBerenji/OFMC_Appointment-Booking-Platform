@@ -194,6 +194,24 @@ namespace OFMC_Booking_Platform.Controllers
             }
         }
 
+        /// <summary>
+        /// Displays detailed info about a specific appointment.
+        /// </summary>
+        /// <param name="id">The appointment ID</param>
+        /// <returns>The appointment info view</returns>
+        [HttpGet("/appointment/info")]
+        public IActionResult AppointmentInfo(int id)
+        {
+            var appointment = _healthcareDbContext.Appointment
+                .Include(a => a.Doctor)
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1); // Just temporary since we dont have login ready yet
+
+            if (appointment == null)
+                return NotFound();
+
+            return View("../Healthcare/AppointmentInfo", appointment);
+        }
+
 
         private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
     }

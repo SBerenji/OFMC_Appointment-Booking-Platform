@@ -1,36 +1,65 @@
 ﻿@using OFMC_Booking_Platform.Entities
 @model List<Appointment>
 
-
 @{
     ViewData["Title"] = "All Appointments";
 }
 
-<p>
-    <h1 class="display-4">All my appointments</h1>
+<div class="container-fluid mt-4">
+    <!-- Header with Log Out -->
+    <div class="d-flex justify-content-end align-items-center mb-3">
+        <form asp-controller="Home" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-outline-secondary">Log Out</button>
+        </form>
+    </div>
 
+    <div class="row">
+        <!-- Left Column: Appointment Info -->
+        <div class="col-md-9">
+            <h6 class="text-muted">Patient - Home</h6>
+            <p><strong>Welcome Back Sara!</strong></p>
+            <p>Please view your upcoming appointments below</p>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Appointment Date</th>
-                <th>Doctor Name</th>
-                <th>Specialty</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Appointment appointment in Model)
-            {
-                <tr>
-                    <td>@appointment.AppointmentDate</td>
-                    <td>@appointment.Doctor.DoctorName</td>
-                    <td>@appointment.Doctor.DoctorSpecialty</td>
-                    <td>
-                        <a asp-controller="Healthcare" asp-action="GetRescheduleAppointmentForm" asp-route-id="@appointment.AppointmentId">Reschedule</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</p>
+            <table class="table table-bordered text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Doctor Name</th>
+                        <th>Specialty</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var appointment in Model)
+                        {
+                            <tr>
+                                <td>@appointment.AppointmentDate?.ToString("MMMM dd, yyyy  hh:mm tt")</td>
+                                <td>@appointment.Doctor?.DoctorName</td>
+                                <td>@appointment.Doctor?.DoctorSpecialty</td>
+                                <td>
+                                    <a asp-controller="Healthcare" asp-action="AppointmentInfo" asp-route-id="@appointment.AppointmentId" class="btn btn-success btn-sm me-1">View Appointment</a>
+                                    <a asp-controller="Healthcare" asp-action="GetRescheduleAppointmentForm" asp-route-id="@appointment.AppointmentId" class="btn btn-secondary btn-sm me-1">Reschedule</a>
+                                    <a asp-controller="Healthcare" asp-action="ConfirmCancelAppointment" asp-route-id="@appointment.AppointmentId" class="btn btn-danger btn-sm">Cancel</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">You currently have no upcoming appointments.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Right Column: Action Buttons -->
+        <div class="col-md-3 d-flex flex-column justify-content-center align-items-center pt-4">
+            <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-success mb-3 w-75 text-center">Get An Appointment</a>
+            <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-primary w-75 text-center">View Appointment History</a>
+        </div>
+    </div>
+</div>
