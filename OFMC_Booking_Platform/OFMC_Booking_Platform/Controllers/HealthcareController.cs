@@ -196,6 +196,68 @@ namespace OFMC_Booking_Platform.Controllers
             }
         }
 
+        /// <summary>
+        /// Displays detailed info about a specific appointment.
+        /// </summary>
+        /// <param name="id">The appointment ID</param>
+        /// <returns>The appointment info view</returns>
+        [HttpGet("/appointment/info")]
+        public IActionResult AppointmentInfo(int id)
+        {
+            var appointment = _healthcareDbContext.Appointment
+                .Include(a => a.Doctor)
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1); // Just temporary since we dont have login ready yet
+
+            if (appointment == null)
+                return NotFound();
+
+            return View("../Healthcare/AppointmentInfo", appointment);
+        }
+
+        /// <summary>
+        /// Cancels the appointment and frees up the time slot.
+        /// </summary>
+        /// <param name="id">The appointment ID</param>
+        /// <returns>Redirects to Appointments view</returns>
+        [HttpPost("/appointment/cancel")]
+        public IActionResult CancelAppointment(int id)
+        {
+            var appointment = _healthcareDbContext.Appointment
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1);
+
+            if (appointment != null)
+            {
+                var slot = _healthcareDbContext.Availability
+                    .FirstOrDefault(s => s.SlotDateTime == appointment.AppointmentDate && s.DoctorId == appointment.DoctorId);
+
+                if (slot != null)
+                    slot.IsBooked = false;
+
+                _healthcareDbContext.Appointment.Remove(appointment);
+                _healthcareDbContext.SaveChanges();
+                TempData["Message"] = "Your appointment has been cancelled.";
+            }
+
+            return RedirectToAction("GetAllAppointments");
+        }
+
+        /// <summary>
+        /// Displays a confirmation page before cancelling an appointment.
+        /// </summary>
+        [HttpGet("/appointment/cancel-confirmation")]
+        public IActionResult ConfirmCancelAppointment(int id)
+        {
+            var appointment = _healthcareDbContext.Appointment
+                .Include(a => a.Doctor)
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1);
+
+            if (appointment == null)
+                return NotFound();
+
+            return View("../Healthcare/CancelConfirmation", appointment);
+        }
+
+
 
         private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
     }
