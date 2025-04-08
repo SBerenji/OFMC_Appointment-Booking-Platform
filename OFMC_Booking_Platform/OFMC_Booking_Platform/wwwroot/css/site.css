@@ -43,3 +43,19 @@ body {
     box-shadow: none;
 }
 /* End of CSS by Sudhan */
+
+.home-custom-btn {
+    width: 250px;
+    height: 50px;
+    font-size: 16px;
+    color: white;
+    border: none;
+}
+
+.green-btn {
+    background-color: #156548;
+}
+
+.patient-btn {
+    background-color: #374E5F;
+}
