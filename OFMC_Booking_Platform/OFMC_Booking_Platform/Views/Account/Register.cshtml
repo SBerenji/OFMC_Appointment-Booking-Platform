@@ -1,0 +1,84 @@
+﻿@model RegisterViewModel
+
+@{
+	ViewData["Title"] = "OFMC Registration";
+}
+
+
+<div class="container mt-5">
+	<div class="d-flex justify-content-between align-items-center">
+		<!-- Left Column for Login prompt -->
+		<div class="d-flex flex-column align-items-center  text-center" style="width: 25%;">
+			<div>
+				<h5 class="fw-normal mb-3">Already have an account?</h5>
+
+				<form asp-controller="Account" asp-action="PatientLoginForm" method="get">
+					<button type="submit" class="btn btn-success px-4 py-2 rounded fs-5">Log In</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Middle Column for Image -->
+		<div class="text-center" style="width: 25%; margin-left: -80px;">
+			<img src="~/Images/Doctor.jpg" alt="Doctor" class="img-fluid" style="max-height: 400px;"/>
+		</div>
+
+		<!-- Right Column for Registration form -->
+		<div style="width: 45%;">
+			<h4 class="fw-bold text-center mb-4">Register To Patient Hub</h4>
+
+			<form asp-controller="Account" asp-action="PatientRegistration" method="post">
+				<div asp-validation-summary="All"></div>
+
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label asp-for="FirstName" class="form-label"></label>
+						<input asp-for="FirstName" class="form-control thick-border" />
+						<span asp-validation-for="FirstName" class="text-danger"></span>
+					</div>
+
+					<div class="col-md-6 mb-3">
+						<label asp-for="LastName" class="form-label"></label>
+						<input asp-for="LastName" class="form-control thick-border" />
+						<span asp-validation-for="LastName" class="text-danger"></span>
+					</div>
+				</div>
+
+
+				<div class="mb-3">
+					<label asp-for="DateOfBirth" class="form-label"></label>
+					<input asp-for="DateOfBirth" class="form-control thick-border" type="date" />
+					<span asp-validation-for="DateOfBirth" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label asp-for="PhoneNumber" class="form-label"></label>
+					<input asp-for="PhoneNumber" class="form-control thick-border" placeholder="000-000-0000" />
+					<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label asp-for="Email" class="form-label"></label>
+					<input asp-for="Email" class="form-control thick-border" />
+					<span asp-validation-for="Email" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label asp-for="Password" class="form-label"></label>
+					<input asp-for="Password" class="form-control thick-border" />
+					<span asp-validation-for="Password" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label asp-for="ConfirmPassword" class="form-label"></label>
+					<input asp-for="ConfirmPassword" class="form-control thick-border" />
+					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+				</div>
+
+				<div class="text-center">
+					<button type="submit" class="btn btn-success px-5 py-2 rounded fs-5">Register</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

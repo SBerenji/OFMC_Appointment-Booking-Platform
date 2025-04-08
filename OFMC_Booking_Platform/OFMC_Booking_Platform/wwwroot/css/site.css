@@ -31,6 +31,18 @@ body {
 }
 
 
+/* Start of CSS by Sudhan */
+.form-control.thick-border {
+    border-width: 2px !important;
+    border-color: #999 !important; /* slightly darker for visibility */
+    border-radius: 4px;
+}
+
+.form-control.thick-border:focus {
+    border-color: #198754 !important; /* Bootstrap success green */
+    box-shadow: none;
+}
+/* End of CSS by Sudhan */
 
 .home-custom-btn {
     width: 250px;
