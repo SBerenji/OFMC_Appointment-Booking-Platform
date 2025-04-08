@@ -2,7 +2,31 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome Page</h1>
-    <p>View <a asp-controller="Healthcare" asp-action="GetAllDoctors">doctors</a> </p> <!--links to List page and Add page -->
-</div>
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <img src="Images/HomeImage.png" class="img-fluid" style="max-width: 80%;" />
+            </div>
+            <div class="col-md-6">
+                <h2>Welcome to the Oakridge Family Medical Center Booking Platform!</h2>
+                <p class="fs-5">Seamless doctor appointments at your fingertips—book, manage, and stay on top of your health with ease.</p>
+
+                <div class="d-flex flex-column align-items-center gap-2 mt-5">
+                    <button class="home-custom-btn admin-btn">I am an admin</button>
+                    <button class="home-custom-btn patient-btn">I am a patient</button>
+
+
+                    <p>View <a asp-controller="Healthcare" asp-action="GetAllDoctors">doctors</a></p>  @*  temporary link, will take out once log in is working *@
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
