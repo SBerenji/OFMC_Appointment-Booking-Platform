@@ -31,7 +31,7 @@ namespace OFMC_Booking_Platform.Entities
 
             // Seeds data into the Party table 
             modelBuilder.Entity<Appointment>().HasData(
-                new Appointment() { AppointmentId = 1, DoctorId=1, PatientId=1, PatientName="Sara Hanks", AppointmentDate= new DateTime(2022, 12, 31, 12, 0, 0), ContactMethod=ContactMethod.Email, AppointmentEmail= "sierraerb25@gmail.com", Notes="Headache" }
+                new Appointment() { AppointmentId = 1, DoctorId=1, PatientId=1, PatientName="Sara Hanks", AppointmentDate= new DateTime(2022, 12, 31, 12, 0, 0), ContactMethod=ContactMethod.Email, AppointmentEmail= "sierraerb25@gmail.com", AppointmentPhone = "+15483335882", Notes="Headache" }
                );
 
             // Seeds data into the Party table 

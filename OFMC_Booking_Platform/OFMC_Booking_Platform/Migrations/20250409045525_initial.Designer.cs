@@ -12,8 +12,8 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    [Migration("20250325175308_Availability")]
-    partial class Availability
+    [Migration("20250409045525_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,9 @@ namespace OFMC_Booking_Platform.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("AppointmentEmail")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppointmentPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContactMethod")
@@ -68,6 +70,7 @@ namespace OFMC_Booking_Platform.Migrations
                             AppointmentId = 1,
                             AppointmentDate = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentEmail = "sierraerb25@gmail.com",
+                            AppointmentPhone = "+15483335882",
                             ContactMethod = 0,
                             DoctorId = 1,
                             Notes = "Headache",

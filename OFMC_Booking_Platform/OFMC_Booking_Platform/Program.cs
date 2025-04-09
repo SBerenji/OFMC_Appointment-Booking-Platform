@@ -17,6 +17,12 @@ builder.Services.AddDbContext<HealthcareDbContext>(options => options.UseSqlServ
 // registring the email service
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// registering the SMS service
+builder.Services.AddScoped<ISmsService, TwilioSmsService>();
+
+
+
+
 
 var app = builder.Build();
 

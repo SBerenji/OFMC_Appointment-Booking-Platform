@@ -14,6 +14,21 @@ namespace OFMC_Booking_Platform.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Availability",
+                columns: table => new
+                {
+                    SlotId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    SlotDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsBooked = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Availability", x => x.SlotId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Doctor",
                 columns: table => new
                 {
@@ -56,7 +71,8 @@ namespace OFMC_Booking_Platform.Migrations
                     PatientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContactMethod = table.Column<int>(type: "int", nullable: false),
-                    AppointmentEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppointmentEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AppointmentPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -68,6 +84,22 @@ namespace OFMC_Booking_Platform.Migrations
                         principalTable: "Doctor",
                         principalColumn: "DoctorId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Availability",
+                columns: new[] { "SlotId", "DoctorId", "IsBooked", "SlotDateTime" },
+                values: new object[,]
+                {
+                    { 1, 1, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 1, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, 2, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, 2, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, 2, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, 3, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 8, 3, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 9, 3, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -90,8 +122,8 @@ namespace OFMC_Booking_Platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Appointment",
-                columns: new[] { "AppointmentId", "AppointmentDate", "AppointmentEmail", "ContactMethod", "DoctorId", "Notes", "PatientId", "PatientName" },
-                values: new object[] { 1, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified), "sierraerb25@gmail.com", 0, 1, "Headache", 1, "Sara Hanks" });
+                columns: new[] { "AppointmentId", "AppointmentDate", "AppointmentEmail", "AppointmentPhone", "ContactMethod", "DoctorId", "Notes", "PatientId", "PatientName" },
+                values: new object[] { 1, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified), "sierraerb25@gmail.com", "+15483335882", 0, 1, "Headache", 1, "Sara Hanks" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointment_DoctorId",
@@ -104,6 +136,9 @@ namespace OFMC_Booking_Platform.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Appointment");
+
+            migrationBuilder.DropTable(
+                name: "Availability");
 
             migrationBuilder.DropTable(
                 name: "Patient");

@@ -10,11 +10,11 @@ namespace OFMC_Booking_Platform.Controllers
     public class HealthcareController : Controller //controller for the healthcare information 
     {
         // constructor - tells the DI container that this controller needs a DB context 
-        public HealthcareController(HealthcareDbContext healthcareDbContext, IEmailService emailService)
+        public HealthcareController(HealthcareDbContext healthcareDbContext, IEmailService emailService, ISmsService smsService)
         {
             _healthcareDbContext = healthcareDbContext; //intitalizes the controller with a reference to the HealthcareDbContext
-            _emailService = emailService;
-
+            _emailService = emailService; // injecting the email service
+            _smsService = smsService;   // injecting the sms service
         }
 
         // GET handler for the list of all of the doctors
@@ -125,6 +125,16 @@ namespace OFMC_Booking_Platform.Controllers
                 }
 
 
+                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Text || appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Phone)
+                {
+                    _smsService.SendConfirmationSms(appointmentViewModel);
+                }
+
+
+
+
 
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllDoctors", "Healthcare");
@@ -153,6 +163,10 @@ namespace OFMC_Booking_Platform.Controllers
                 return View("../Patient/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
             }
         }
+
+
+
+
 
         [HttpPost("/doctor/reschedule-appointment")]
         public IActionResult RescheduleAppointment(AppointmentViewModel appointmentViewModel)
@@ -279,7 +293,8 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
-        private readonly IEmailService _emailService;
+        private readonly IEmailService _emailService;  
+        private readonly ISmsService _smsService;
 
     }
 }

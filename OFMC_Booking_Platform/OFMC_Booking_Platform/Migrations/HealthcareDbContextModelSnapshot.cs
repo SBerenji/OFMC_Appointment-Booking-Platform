@@ -34,7 +34,9 @@ namespace OFMC_Booking_Platform.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("AppointmentEmail")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppointmentPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContactMethod")
@@ -65,6 +67,7 @@ namespace OFMC_Booking_Platform.Migrations
                             AppointmentId = 1,
                             AppointmentDate = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentEmail = "sierraerb25@gmail.com",
+                            AppointmentPhone = "+15483335882",
                             ContactMethod = 0,
                             DoctorId = 1,
                             Notes = "Headache",
