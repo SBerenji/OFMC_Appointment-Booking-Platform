@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OFMC_Booking_Platform.Entities
 {
-    public enum ContactMethod { Email = 0, Phone, Text } //Enum for the Invite Status
+    public enum ContactMethod { Email = 0, Phone, Text } //Enum for the Contact Method
 
     public class Appointment 
     {
@@ -22,7 +22,7 @@ namespace OFMC_Booking_Platform.Entities
 
 
         [Required(ErrorMessage = "Please enter a patient name")] // Error message if PatientName is not entered
-        public string? PatientName { get; set; } //can get and set the party PatientName
+        public string? PatientName { get; set; } //can get and set the PatientName
 
         [Required(ErrorMessage = "Please select a appointment date")] // Error message if AppointmentDate is not entered
         public DateTime? AppointmentDate { get; set; } //can get and set the AppointmentDate

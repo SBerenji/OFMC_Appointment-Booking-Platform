@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Entities;
+using OFMC_Booking_Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ string? dbConn = builder.Configuration.GetConnectionString("OFMC_DB");
 //add our db context class as a service to the DI container
 builder.Services.AddDbContext<HealthcareDbContext>(options => options.UseSqlServer(dbConn));
 
+
+// registring the email service
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 var app = builder.Build();
