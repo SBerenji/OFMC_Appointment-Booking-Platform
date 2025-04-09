@@ -2,6 +2,7 @@
 using OFMC_Booking_Platform.Entities;
 using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Models;
+using OFMC_Booking_Platform.Services;
 using System.IO;
 
 namespace OFMC_Booking_Platform.Controllers
@@ -9,9 +10,11 @@ namespace OFMC_Booking_Platform.Controllers
     public class HealthcareController : Controller //controller for the healthcare information 
     {
         // constructor - tells the DI container that this controller needs a DB context 
-        public HealthcareController(HealthcareDbContext healthcareDbContext)
+        public HealthcareController(HealthcareDbContext healthcareDbContext, IEmailService emailService, ISmsService smsService)
         {
             _healthcareDbContext = healthcareDbContext; //intitalizes the controller with a reference to the HealthcareDbContext
+            _emailService = emailService; // injecting the email service
+            _smsService = smsService;   // injecting the sms service
         }
 
         // GET handler for the list of all of the doctors
@@ -93,7 +96,7 @@ namespace OFMC_Booking_Platform.Controllers
         [HttpPost("/doctor/book-appointment")]
         public IActionResult BookAppointment(AppointmentViewModel appointmentViewModel)
         {
-            
+
             //retrieves doctor id, and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
             appointmentViewModel.ActiveAppointment.PatientId = 1; //set to 1 for now until we have different patients 
@@ -108,9 +111,35 @@ namespace OFMC_Booking_Platform.Controllers
                 _healthcareDbContext.Appointment.Add(appointmentViewModel.ActiveAppointment);   // add the appointment information in the database 
 
                 _healthcareDbContext.SaveChanges(); // saves the changes to the database
-                
+
+
+                // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
+                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
+                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+
+                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email) 
+                {
+
+                    _emailService.SendConfirmatioEmail(appointmentViewModel);
+                }
+
+
+                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Text || appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Phone)
+                {
+                    _smsService.SendConfirmationSms(appointmentViewModel);
+                }
+
+
+
+
+
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllDoctors", "Healthcare");
+
+
             }
             else
             {
@@ -134,6 +163,10 @@ namespace OFMC_Booking_Platform.Controllers
                 return View("../Patient/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
             }
         }
+
+
+
+
 
         [HttpPost("/doctor/reschedule-appointment")]
         public IActionResult RescheduleAppointment(AppointmentViewModel appointmentViewModel)
@@ -260,5 +293,8 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
+        private readonly IEmailService _emailService;  
+        private readonly ISmsService _smsService;
+
     }
 }

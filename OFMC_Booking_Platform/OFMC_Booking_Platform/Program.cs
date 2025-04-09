@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Entities;
+using OFMC_Booking_Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,11 @@ builder.Services.AddDefaultIdentity<User>(
 .AddEntityFrameworkStores<HealthcareDbContext>();
 
 
+// registring the email service
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// registering the SMS service
+builder.Services.AddScoped<ISmsService, TwilioSmsService>();
 
 var app = builder.Build();
 
