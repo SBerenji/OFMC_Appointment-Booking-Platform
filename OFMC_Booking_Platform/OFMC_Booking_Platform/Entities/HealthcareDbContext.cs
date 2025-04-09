@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace OFMC_Booking_Platform.Entities
 {
-    public class HealthcareDbContext : DbContext //Database context entity that inherits from DbContext
+    public class HealthcareDbContext : IdentityDbContext<User> //Database context entity that inherits from DbContext
     {
         public HealthcareDbContext(DbContextOptions<HealthcareDbContext> options) : base(options) { }
 
@@ -19,6 +20,8 @@ namespace OFMC_Booking_Platform.Entities
         // Seeds data into database tables 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Seeds data into the Party table 
             modelBuilder.Entity<Doctor>().HasData(
                 new Doctor() { DoctorId = 1, DoctorName = "Dr. Emily Carter", DoctorSpecialty = "Family Physician", DoctorExt = 106 },
