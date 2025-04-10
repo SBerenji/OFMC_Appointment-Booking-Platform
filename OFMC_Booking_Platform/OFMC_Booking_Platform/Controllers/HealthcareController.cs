@@ -252,7 +252,7 @@ namespace OFMC_Booking_Platform.Controllers
             if (appointment == null)
                 return NotFound();
 
-            return View("../Healthcare/AppointmentInfo", appointment);
+            return View("../Patient/AppointmentInfo", appointment);
         }
 
 
