@@ -33,9 +33,12 @@ namespace OFMC_Booking_Platform.Controllers
         [HttpGet("/appointments")] //specifies the URL - GET handler for the list of all of the appointments
         public IActionResult GetAllAppointments()
         {
+            int patientId = 1;
+
             //retrieves a list of appointments from the database
             List<Appointment> appointments = _healthcareDbContext.Appointment
                 .Include(m => m.Doctor) // Include the related Doctor data
+                .Where(m => m.PatientId == patientId)
                 .ToList();
 
             return View("../Patient/Appointments", appointments);  //returns the list of appointments to the view using the view name
@@ -46,6 +49,12 @@ namespace OFMC_Booking_Platform.Controllers
         [HttpGet("/doctor/book-appointment-form")] //specifies the URL - GET handler for the blank add form
         public IActionResult GetAppointmentForm(int id)
         {
+
+            int patientID = 1;
+            Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+            string patientName = patient?.FirstName + " " + patient?.LastName;
+
+
             // tries to find doctor with the id from the database
             Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == id).FirstOrDefault();
 
@@ -54,10 +63,6 @@ namespace OFMC_Booking_Platform.Controllers
                 .OrderBy(a => a.SlotDateTime)
                 .ToList();
 
-            int patientID = 1;
-            Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
-            string patientName = patient?.FirstName + " " + patient?.LastName;
-            
             // populates the appointmentViewModel with the existing doctor info 
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
             {
@@ -140,13 +145,8 @@ namespace OFMC_Booking_Platform.Controllers
                     _smsService.SendConfirmationSms(appointmentViewModel);
                 }
 
-
-
-
-
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllDoctors", "Healthcare");
-
 
             }
             else
