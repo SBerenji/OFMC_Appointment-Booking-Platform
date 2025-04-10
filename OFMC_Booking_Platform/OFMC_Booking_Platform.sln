@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OFMC_Booking_Platform", "OFMC_Booking_Platform\OFMC_Booking_Platform.csproj", "{4877CBA8-AED8-41FD-9CE1-97D4406D792E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumTests", "SeleniumTests\SeleniumTests.csproj", "{C149E12A-1F31-4019-8663-0910BDB0F8E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4877CBA8-AED8-41FD-9CE1-97D4406D792E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4877CBA8-AED8-41FD-9CE1-97D4406D792E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4877CBA8-AED8-41FD-9CE1-97D4406D792E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C149E12A-1F31-4019-8663-0910BDB0F8E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C149E12A-1F31-4019-8663-0910BDB0F8E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C149E12A-1F31-4019-8663-0910BDB0F8E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C149E12A-1F31-4019-8663-0910BDB0F8E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
