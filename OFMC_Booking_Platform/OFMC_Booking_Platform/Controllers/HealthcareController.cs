@@ -54,13 +54,21 @@ namespace OFMC_Booking_Platform.Controllers
                 .OrderBy(a => a.SlotDateTime)
                 .ToList();
 
-
+            int patientID = 1;
+            Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+            string patientName = patient?.FirstName + " " + patient?.LastName;
+            
             // populates the appointmentViewModel with the existing doctor info 
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
             {
                 ActiveDoctor = doctor,
+                ActivePatient = patient,
                 Availability = availableSlots,
                 ActiveAppointment = new Appointment()
+                {
+                    PatientName = patientName,
+                    AppointmentEmail = patient?.PatientEmail
+                }
             };
 
             // return that appointmentViewModel to the view
@@ -245,6 +253,31 @@ namespace OFMC_Booking_Platform.Controllers
                 return NotFound();
 
             return View("../Healthcare/AppointmentInfo", appointment);
+        }
+
+
+        [HttpGet("/appointment/cancel-form")] //specifies the URL - GET handler for the blank reschedule form
+        public IActionResult GetCanceltForm(int id)
+        {
+            // tries to find appointment and doctor with the id from the database
+            Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == id).FirstOrDefault();
+            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+
+            //gets list of available slots for that doctor
+            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
+                .OrderBy(a => a.SlotDateTime)
+                .ToList();
+
+            // populates the appointmentViewModel with the existing appointment info and doctor
+            AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
+            {
+                ActiveDoctor = doctor,
+                ActiveAppointment = appointment,
+                Availability = availableSlots
+            };
+
+            // return that appointmentViewModel to the view
+            return View("../Patient/CancelConfirmation", appointmentViewModel);
         }
 
         /// <summary>
