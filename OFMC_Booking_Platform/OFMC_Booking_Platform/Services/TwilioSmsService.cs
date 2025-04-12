@@ -49,6 +49,7 @@ namespace OFMC_Booking_Platform.Services
                     $"({appointmentViewModel.ActiveDoctor.DoctorSpecialty}) is scheduled for " +
                     $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("MMMM dd, yyyy")} at " +
                     $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}.\n\n" +
+                    $"We look forward to seeing you!\n" +
                     $"Best regards, " +
                     $"\nOakridge Family Medical Center. " +
                     $"\nPhone: (555) 987-6543 | Email: info@oakridgemedical.com",
@@ -98,12 +99,42 @@ namespace OFMC_Booking_Platform.Services
             var message = MessageResource.Create(
                 body: $"Dear {appointmentViewModel.ActiveAppointment.PatientName}, " +
 
-                    $"You have successfully cancelled your appointment with {appointmentViewModel.ActiveAppointment.Doctor.DoctorName} " +
+                    $"you have successfully cancelled your appointment with {appointmentViewModel.ActiveAppointment.Doctor.DoctorName} " +
                     $"({appointmentViewModel.ActiveDoctor.DoctorSpecialty}) on " +
                     $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("MMMM dd, yyyy")} at " +
                     $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}\n\n" +
 
-                    $" If you wish to reschedule your appointment, please visit our platform or contact us at (555) 987-6543.\n\n" +
+                    $"If you wish to reschedule your appointment, please visit our platform or contact us at (555) 987-6543.\n\n" +
+                    $"Best regards, " +
+                    $"\nOakridge Family Medical Center. " +
+                    $"\nPhone: (555) 987-6543 | Email: info@oakridgemedical.com",
+
+
+                messagingServiceSid: _messagingServiceSid,
+                to: new PhoneNumber(appointmentViewModel.ActiveAppointment.AppointmentPhone)
+            );
+        }
+
+
+
+
+        // Defining a method that sends an SMS notification to the patient once the patient reschedules their appointment
+        public void SendPatientRescheduleConfirmationSMS(AppointmentViewModel appointmentViewModel)
+        {
+            TwilioClient.Init(_accountSid, _authToken);
+
+            var message = MessageResource.Create(
+                body: $"Dear {appointmentViewModel.ActiveAppointment.PatientName}, " +
+
+                    $"You have successfully rescheduled your appointment with {appointmentViewModel.ActiveAppointment.Doctor.DoctorName} " +
+                    $"Below are the details of your new appointment: \n" +
+                    $"Doctor name: {appointmentViewModel.ActiveAppointment.Doctor.DoctorName}" +
+                    $"({appointmentViewModel.ActiveDoctor.DoctorSpecialty})" +
+                    $"Date and Time: {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("MMMM dd, yyyy")} at " +
+                    $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}\n\n" +
+
+                    $"If you have any questions or need to make additional changes, feel free to call the number below or email us using the address provided.\n\n" +
+
                     $"Best regards, " +
                     $"\nOakridge Family Medical Center. " +
                     $"\nPhone: (555) 987-6543 | Email: info@oakridgemedical.com",
