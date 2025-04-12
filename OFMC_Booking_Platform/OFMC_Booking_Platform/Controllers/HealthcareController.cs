@@ -236,23 +236,6 @@ namespace OFMC_Booking_Platform.Controllers
 
 
 
-                //// Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                //if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email)
-                //{
-
-                //    _emailService.SendConfirmatioEmail(appointmentViewModel);
-                //}
-
-
-                //// Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
-                //// Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                //if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Text || appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Phone)
-                //{
-                //    _smsService.SendConfirmationSms(appointmentViewModel);
-                //}
-
-
-
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllAppointments", "Healthcare");
 
@@ -533,21 +516,6 @@ namespace OFMC_Booking_Platform.Controllers
                         _smsService.SendPatientCancellationSms(appointmentViewModel);
                         break;
                 }
-
-
-                //// Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                //if (appointment.ContactMethod == ContactMethod.Email)
-                //{
-
-                //    _emailService.SendPatientCancellationEmail(appointmentViewModel);
-                //}
-
-
-                //// Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
-                //if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
-                //{
-                //    _smsService.SendPatientCancellationSms(appointmentViewModel);
-                //}
 
 
                 var slot = _healthcareDbContext.Availability

@@ -156,8 +156,7 @@ namespace OFMC_Booking_Platform.Controllers
 
                     Console.WriteLine("Redirecting Admin....");
 
-                    // Needs to be Linked.
-                    return RedirectToAction("Index", "HealthCare");
+                    return RedirectToAction("GetDoctorsList", "Admin");
                 }
 
                 else

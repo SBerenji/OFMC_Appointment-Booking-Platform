@@ -6,96 +6,98 @@
 }
 
 
+<div class="container my-5">
+    <h4 class="fw-bold">Book your appointment for @Model.ActiveDoctor.DoctorName</h4>
+    <hr />
 
-<h1 class="display-4">Book your appointment</h1>
+    <form asp-controller="Healthcare" asp-action="BookAppointment" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="text-danger" asp-validation-summary="All"></div>
 
-<p><strong>Book your appointment with @Model.ActiveDoctor.DoctorName</strong></p>
+        <input type="hidden" asp-for="ActiveDoctor.DoctorId" />
+        <input type="hidden" asp-for="ActivePatient.PatientId" />
+        <input type="hidden" asp-for="ActivePatient.FirstName" />
+        <input type="hidden" asp-for="ActivePatient.LastName" />
+        <input type="hidden" asp-for="ActivePatient.DOB" />
+        <input type="hidden" asp-for="ActivePatient.PatientEmail" />
+        <input type="hidden" asp-for="ActivePatient.UserId" />
 
-<form asp-controller="Healthcare" asp-action="BookAppointment" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="row">
+            <div class="col-md-6">
 
-    <div class="text-danger" asp-validation-summary="All"></div>
+                <div class="mb-3">
+                    <label asp-for="ActiveAppointment.PatientName" class="form-label">Patient Name <span class="text-danger">*</span></label>
+                    <input type="text" asp-for="ActiveAppointment.PatientName" class="form-control" readonly />
+                </div>
+
+                <!-- Time Slot Dropdown -->
+                <div class="mb-3">
+                    <label asp-for="ActiveAppointment.AppointmentDate" class="form-label">Select an Available Time Slot<span class="text-danger">*</span></label>
+                    <select asp-for="ActiveAppointment.AppointmentDate" class="form-control">
+                        @if (Model.Availability != null && Model.Availability.Any())
+                        {
+                            @foreach (var slot in Model.Availability)
+                            {
+                                <option value="@slot.SlotDateTime">@slot.SlotDateTime.ToString("f")</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">No available slots</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Contact Method -->
+                <div class="mb-3">
+                    <label class="form-label d-block">What is your preferred method of contact? <span class="text-danger">*</span></label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="ActiveAppointment.ContactMethod" id="contactEmail" value="@nameof(ContactMethod.Email)" checked />
+                        <label class="form-check-label" for="contactEmail">Email</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="ActiveAppointment.ContactMethod" id="contactPhone" value="@nameof(ContactMethod.Phone)" />
+                        <label class="form-check-label" for="contactPhone">Phone</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="ActiveAppointment.ContactMethod" id="contactText" value="@nameof(ContactMethod.Text)" />
+                        <label class="form-check-label" for="contactText">Text</label>
+                    </div>
+                </div>
+
+                <!-- Email Input (shown conditionally) -->
+                <div class="mb-3" id="emailField" style="display: none;">
+                    <label asp-for="ActiveAppointment.AppointmentEmail" class="form-label">Email Address</label>
+                    <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" id="emailInput" />
+                </div>
+
+                <!-- Phone Field that is initially hidden -->
+                <div class="mb-3" id="phoneField" style="display: none;">
+                    <label asp-for="ActiveAppointment.AppointmentPhone" class="form-label">Phone Number</label>
+                    <input type="text" asp-for="ActiveAppointment.AppointmentPhone" class="form-control" id="phoneInput" />
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-success px-4">Save</button>
+                    <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-secondary px-4">Cancel</a>
+                </div>
+            </div>
+
+            <!-- Right Column: Notes -->
+            <div class="col-md-6">
+                <label asp-for="ActiveAppointment.Notes" class="form-label">Please describe the reason for your visit (e.g., checkup, flu symptoms, chronic condition, follow-up, etc.)</label>
+                <textarea asp-for="ActiveAppointment.Notes" class="form-control" rows="10"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
 
 
-    <input type="hidden" asp-for="ActiveDoctor.DoctorId" />
-    <input type="hidden" asp-for="ActivePatient.PatientId" />
-    <input type="hidden" asp-for="ActivePatient.FirstName" />
-    <input type="hidden" asp-for="ActivePatient.LastName" />
-    <input type="hidden" asp-for="ActivePatient.DOB" />
-    <input type="hidden" asp-for="ActivePatient.PatientEmail" />
-    <input type="hidden" asp-for="ActivePatient.UserId" />
-
-
-    <div class="form-group">
-        <label asp-for="ActiveAppointment.PatientName">Patient Name</label>
-        <input type="text" asp-for="ActiveAppointment.PatientName" class="form-control" />
-    </div>
 
 
 
-    <div class="form-group">
-        <label asp-for="ActiveAppointment.AppointmentDate">Select an Available Time Slot</label>
-        <select asp-for="ActiveAppointment.AppointmentDate" class="form-control">
-            @if (Model.Availability != null && Model.Availability.Any())
-            {
-                @foreach (var slot in Model.Availability)
-                {
-                    <option value="@slot.SlotDateTime">@slot.SlotDateTime.ToString("f")</option>
-                }
-            }
-            else
-            {
-                <option value="">No available slots</option>
-            }
-        </select>
-    
-    </div>
-
-
-    <!-- Email Address Field that is initially hidden -->
-    <div class="form-group" id="emailField" style="display:none;">
-        <label asp-for="ActiveAppointment.AppointmentEmail">Email Address</label>
-        <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" id="emailInput" />
-    </div>
 
 
 
-    <!-- Phone Number Field that is initially hidden -->
-    <div class="form-group" id="phoneField" style="display:none;">
-        <label asp-for="ActiveAppointment.AppointmentPhone">Phone Number</label>
-        <input type="text" asp-for="ActiveAppointment.AppointmentPhone" class="form-control" id="phoneInput" />
-        
-    </div>
-
-    @* <div class="form-group"> *@
-    @*     <label asp-for="ActiveAppointment.AppointmentEmail">Email Address</label> *@
-    @*     <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" /> *@
-    @* </div> *@
-
-    @* <div class="form-group"> *@
-    @*     <label asp-for="ActiveAppointment.AppointmentPhone">Phone Number</label> *@
-    @*     <input type="text" asp-for="ActiveAppointment.AppointmentPhone" class="form-control" /> *@
-    @* </div> *@
-
-
-
-    <div class="form-group">
-        What is your preferred method of contact?
-        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Email)" id = "contactEmail" checked="" />
-        <label>  Email  </label>
-        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Phone)" id = "contactPhone"  />
-        <label>  Phone  </label>
-        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Text) " id="contactText" />
-        <label>  Text  </label>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ActiveAppointment.Notes">Please describe the reason for your visit</label>
-        <input type="text" asp-for="ActiveAppointment.Notes" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-secondary">Cancel</a>
-</form>
 
 
 <!-- A JS plugin used for automatic filling of the phone number field in a specific format -->
