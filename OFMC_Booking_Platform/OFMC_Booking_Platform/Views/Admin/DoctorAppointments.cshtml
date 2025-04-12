@@ -1,0 +1,61 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model DoctorAppointmentsViewModel
+
+@{
+    ViewData["Title"] = "Doctor Appointments";
+}
+
+
+<img src="/Images/Chevron_left.svg" class="img-fluid" style="max-width: 5%;" />
+
+
+<a asp-controller="Admin" asp-action="GetDoctorsList">Return to the doctors list</a>
+
+
+
+<div class="container mt-3">
+
+    <h2>Please view the upcoming appointments scheduled for @Model.DoctorName </h2>
+
+
+    <!-- if else required to print a statement if there are no appointments to display  -->
+    @if (Model.Appointments != null && Model.Appointments.Any())   
+    {
+        <table class="table table-bordered table-striped mt-1">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Date & Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model.Appointments)
+                {
+                    <tr>
+                        <td>@appointment.PatientName</td>
+                        <td>@appointment.AppointmentDate?.ToString("MMMM dd, yyyy  hh:mm tt")</td>
+
+                        <td>
+                            <a asp-controller="Admin" asp-action="GetAppointmentDetails" asp-route-id="@appointment.AppointmentId"
+                               class="action-btn green-btn">
+                                View Appointment Details
+                            </a>
+                            <a asp-controller="Admin" asp-action="CancelPatientAppointment" asp-route-id="@Model.DoctorId"
+                               class="action-btn cancel-btn">
+                                Cancel
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+     }
+
+    else
+    {
+        <h4 class="text-muted">@Model.DoctorName does not have any appointments at the moment</h4>
+    }
+
+</div>
+

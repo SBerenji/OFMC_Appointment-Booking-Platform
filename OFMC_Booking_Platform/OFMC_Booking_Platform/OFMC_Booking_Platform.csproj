@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Emails\" />
   </ItemGroup>
 
 </Project>
