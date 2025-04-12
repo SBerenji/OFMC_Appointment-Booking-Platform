@@ -90,8 +90,12 @@
 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
-			// This will now work because Inputmask is properly loaded
-			Inputmask("999-999-9999").mask(document.getElementById("PhoneNumber"));
+			Inputmask({
+				mask: "+1999-999-9999",
+				placeholder: "_",
+				showMaskOnHover: false,
+				showMaskOnFocus: true
+			}).mask(document.getElementById("PhoneNumber"));
 		});
 	</script>
 }

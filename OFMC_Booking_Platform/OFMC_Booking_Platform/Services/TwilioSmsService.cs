@@ -55,7 +55,7 @@ namespace OFMC_Booking_Platform.Services
 
 
                 messagingServiceSid: _messagingServiceSid,
-                to: new PhoneNumber(appointmentViewModel.ActiveAppointment.AppointmentPhone)
+                to: new PhoneNumber(appointmentViewModel.ActiveAppointment.AppointmentPhone.Replace("-", ""))
             );
 
 

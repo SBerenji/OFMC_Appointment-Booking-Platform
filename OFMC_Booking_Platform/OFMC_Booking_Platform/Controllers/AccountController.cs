@@ -86,7 +86,7 @@ namespace OFMC_Booking_Platform.Controllers
                 newUser.FirstName = RegistrationInfo.FirstName;
                 newUser.LastName = RegistrationInfo.LastName;
                 newUser.DateOfBirth = RegistrationInfo.DateOfBirth;
-                newUser.PhoneNumber = RegistrationInfo.PhoneNumber;
+                newUser.PhoneNumber = RegistrationInfo.PhoneNumber.Replace("-", "");
                 newUser.Email = RegistrationInfo.Email;
 
                 // Here we attempt to register the new account.

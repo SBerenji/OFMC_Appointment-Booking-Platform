@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OFMC_Booking_Platform.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Account : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -247,7 +247,16 @@ namespace OFMC_Booking_Platform.Migrations
                     { 6, 2, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
                     { 7, 3, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
                     { 8, 3, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 9, 3, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 9, 3, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10, 4, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 11, 4, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 12, 4, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 13, 5, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 14, 5, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 15, 5, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 16, 6, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 17, 6, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 18, 6, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
