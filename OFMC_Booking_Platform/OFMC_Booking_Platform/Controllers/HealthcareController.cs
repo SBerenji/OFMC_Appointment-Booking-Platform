@@ -44,6 +44,17 @@ namespace OFMC_Booking_Platform.Controllers
             return View("../Patient/Appointments", appointments);  //returns the list of appointments to the view using the view name
         }
 
+        [HttpGet("/appointments/history")]
+        public IActionResult GetAppointmentHistory()
+        {
+            var history = _healthcareDbContext.Appointment
+                .Include(a => a.Doctor)
+                .Where(a => a.AppointmentDate < DateTime.Now && a.PatientId == 1) // mock for Sara
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToList();
+
+            return View("../Patient/AppointmentHistory", history);
+        }
 
 
         [HttpGet("/doctor/book-appointment-form")] //specifies the URL - GET handler for the blank add form
