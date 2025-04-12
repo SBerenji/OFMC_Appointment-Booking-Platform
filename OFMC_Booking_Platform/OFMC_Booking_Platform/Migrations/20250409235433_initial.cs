@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OFMC_Booking_Platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Account : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -219,7 +219,8 @@ namespace OFMC_Booking_Platform.Migrations
                     PatientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContactMethod = table.Column<int>(type: "int", nullable: false),
-                    AppointmentEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppointmentEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AppointmentPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -269,8 +270,8 @@ namespace OFMC_Booking_Platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Appointment",
-                columns: new[] { "AppointmentId", "AppointmentDate", "AppointmentEmail", "ContactMethod", "DoctorId", "Notes", "PatientId", "PatientName" },
-                values: new object[] { 1, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified), "sierraerb25@gmail.com", 0, 1, "Headache", 1, "Sara Hanks" });
+                columns: new[] { "AppointmentId", "AppointmentDate", "AppointmentEmail", "AppointmentPhone", "ContactMethod", "DoctorId", "Notes", "PatientId", "PatientName" },
+                values: new object[] { 1, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified), "sierraerb25@gmail.com", "+15483335882", 0, 1, "Headache", 1, "Sara Hanks" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointment_DoctorId",

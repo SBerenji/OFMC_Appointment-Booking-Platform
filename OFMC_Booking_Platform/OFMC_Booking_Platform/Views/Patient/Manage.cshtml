@@ -25,7 +25,12 @@
                     <td>@doctor.DoctorSpecialty</td>
                     <td>@doctor.DoctorExt</td>
                     <td>
-                        <a asp-controller="Healthcare" asp-action="GetAppointmentForm" asp-route-id="@doctor.DoctorId">Book an appointment</a>
+@*                         <a asp-controller="Healthcare" asp-action="GetAppointmentForm" asp-route-id="@doctor.DoctorId">Book an appointment</a>
+ *@
+                        <a asp-controller="Healthcare" asp-action="GetAppointmentForm" asp-route-id="@doctor.DoctorId"
+                           class="btn btn-success btn-sm">
+                            Book an appointment
+                        </a>
                     </td>
                 </tr>
             }

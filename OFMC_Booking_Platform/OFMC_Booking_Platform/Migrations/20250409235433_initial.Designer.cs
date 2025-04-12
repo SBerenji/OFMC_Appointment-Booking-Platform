@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OFMC_Booking_Platform.Entities;
 
@@ -11,9 +12,11 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    partial class HealthcareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409235433_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,69 +298,6 @@ namespace OFMC_Booking_Platform.Migrations
                         {
                             SlotId = 9,
                             DoctorId = 3,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 10,
-                            DoctorId = 4,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 11,
-                            DoctorId = 4,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 12,
-                            DoctorId = 4,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 13,
-                            DoctorId = 5,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 14,
-                            DoctorId = 5,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 15,
-                            DoctorId = 5,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 16,
-                            DoctorId = 6,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 17,
-                            DoctorId = 6,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 18,
-                            DoctorId = 6,
                             IsBooked = false,
                             SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         });
