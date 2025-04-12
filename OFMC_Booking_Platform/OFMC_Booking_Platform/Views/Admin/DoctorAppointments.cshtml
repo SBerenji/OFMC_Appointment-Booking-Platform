@@ -6,6 +6,13 @@
 }
 
 
+<img src="/Images/Chevron_left.svg" class="img-fluid" style="max-width: 5%;" />
+
+
+<a asp-controller="Admin" asp-action="GetDoctorsList">Return to the doctors list</a>
+
+
+
 <div class="container mt-3">
 
     <h2>Please view the upcoming appointments scheduled for @Model.DoctorName </h2>
@@ -30,7 +37,7 @@
                         <td>@appointment.AppointmentDate?.ToString("MMMM dd, yyyy  hh:mm tt")</td>
 
                         <td>
-                            <a asp-controller="Admin" asp-action="GetDoctorAppointmentDetails" asp-route-id="@Model.DoctorId"
+                            <a asp-controller="Admin" asp-action="GetAppointmentDetails" asp-route-id="@appointment.AppointmentId"
                                class="action-btn green-btn">
                                 View Appointment Details
                             </a>

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OFMC_Booking_Platform.Models
 {
-    public class DoctorAppointmentsViewModel //a model that holds data to display for detailed appointment info
+    public class DoctorAppointmentsViewModel //a model that holds data to display the appointments associated with a doctor
     {
 
         public int DoctorId { get; set; }

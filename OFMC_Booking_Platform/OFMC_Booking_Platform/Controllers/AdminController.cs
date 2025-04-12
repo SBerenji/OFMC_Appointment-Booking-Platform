@@ -28,7 +28,7 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
-        // Defining a method that gets all the appointments associated with a doctor and returns to the viewmodel
+        // Defining an action that gets all the appointments associated with a doctor and returns to the viewmodel
         [HttpGet]
         public IActionResult GetDoctorAppointments(int doctorId)
         {
@@ -50,6 +50,7 @@ namespace OFMC_Booking_Platform.Controllers
                     .OrderBy(a => a.AppointmentDate)
                     .Select(a => new AppointmentInfoViewModel
                     {
+                        AppointmentId = a.AppointmentId,
                         PatientName = a.PatientName,
                         AppointmentDate = a.AppointmentDate
                     })
@@ -61,12 +62,19 @@ namespace OFMC_Booking_Platform.Controllers
 
 
 
+        // defining an action that gets the information of the patient associated with an appointment 
+        [HttpGet("/doctorAppointmentDetails")]
+        public IActionResult GetAppointmentDetails(int id)
+        {
+            var appointment = _healthcareDbContext.Appointment
+                 .Include(a => a.Doctor)
+                 .FirstOrDefault(a => a.AppointmentId == id);  // find the specific appointment of the patient
 
-        //[HttpGet("/doctorAppointmentDetails")]
-        //public IActionResult GetDoctorAppointmentDetails()
-        //{
-        //    //to be implemented later
-        //}
+            if (appointment == null)
+                return NotFound();
+
+            return View("../Admin/AppointmentDetails", appointment); // return the appointment information to the view
+        }
 
 
 

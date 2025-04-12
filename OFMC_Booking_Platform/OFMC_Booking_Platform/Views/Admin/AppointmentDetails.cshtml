@@ -5,12 +5,11 @@
     ViewData["Title"] = "Appointment Info";
 }
 
+<img src="/Images/Chevron_lef.svg" class="img-fluid" style="max-width: 5%;" />
 
-<img src="Images/Chevron left.svg" class="img-fluid" style="max-width: 5%;" />
+<a asp-controller="Admin" asp-action="GetDoctorAppointments" asp-route-doctorId="@Model.Doctor?.DoctorId">Return to Appointments</a>
 
-<a asp-controller="Healthcare" asp-action="GetAllAppointments">Return to Appointments</a>
-
-<h1 class="display-4">Appointment Info</h1>
+<h4 class="display-4">Appointment Info</h4>
 
 <div class="container my-5">
     <div class="card shadow-sm p-4">
@@ -23,7 +22,7 @@
                     <img src="Images/PatientAvatar.svg" class="img-fluid" style="max-width: 15%;" />
                     <h5 class="mb-0">Patient Information</h5>
                 </div>
-                
+
                 <p><strong>Name:</strong> @Model.PatientName</p>
 
 
@@ -37,7 +36,6 @@
                 {
                     <p><strong>Phone Number:</strong> @Model.AppointmentPhone</p>
                 }
-
                 <p><strong>Preferred Contact:</strong> @Model.ContactMethod</p>
                 <p><strong>Appointment Date & Time:</strong> @Model.AppointmentDate?.ToString("f")</p>
                 <p><strong>Reason for Visit:</strong> @Model.Notes</p>
@@ -45,10 +43,13 @@
 
             <!-- Right Column: Doctor Info -->
             <div class="col-md-6 mb-3">
+
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <img src="Images/doctor.svg" class="img-fluid" style="max-width: 15%;" />
                     <h5 class="mb-0">Doctor Information</h5>
-                </div>                <p><strong>Name:</strong> @Model.Doctor?.DoctorName</p>
+                </div>
+
+                <p><strong>Name:</strong> @Model.Doctor?.DoctorName</p>
                 <p><strong>Specialty:</strong> @Model.Doctor?.DoctorSpecialty</p>
                 <p><strong>Extension:</strong> @Model.Doctor?.DoctorExt</p>
                 <p><strong>Phone:</strong> (555) 987-6543 (EXT. @Model.Doctor?.DoctorExt)</p>
@@ -56,8 +57,5 @@
             </div>
         </div>
 
-        <div class="mt-4">
-            <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-outline-primary">Return to Appointments</a>
-        </div>
     </div>
 </div>
