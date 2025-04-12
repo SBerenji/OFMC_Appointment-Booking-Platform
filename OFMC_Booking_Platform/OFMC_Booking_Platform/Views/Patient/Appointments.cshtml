@@ -17,13 +17,13 @@
             <form asp-controller="Account" asp-action="Logout" method="post">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn-outline-secondary">Log Out</button>
+
             </form>
         </div>
 
         <div class="row">
             <!-- Left Column: Appointment Info -->
             <div class="col-md-9">
-                <h6 class="text-muted">Patient - Home</h6>
                 <p><strong>Welcome Back @Model.Patient.FirstName @Model.Patient.LastName!</strong></p>
                 <p>Please view your upcoming appointments below</p>
 
