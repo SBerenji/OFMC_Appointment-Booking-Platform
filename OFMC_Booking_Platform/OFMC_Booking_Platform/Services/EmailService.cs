@@ -105,14 +105,16 @@ namespace OFMC_Booking_Platform.Services
 
 
 
-        // Defining a method that sends a cancellation notification to the client once the admin cancels the appointment
+        // Defining a method that sends a cancellation Email notification to the client once the admin cancels the appointment
         public void SendAdminCancellationEmail(AppointmentViewModel appointmentViewModel)
         {
             var body = $@"
-            <p style='font-size:16px;'>❗ <strong>We regret to inform you that your appointment has been canceled.</strong></p>
+
+            <p> <strong> Dear {appointmentViewModel.ActiveAppointment.PatientName} </p>
+
 
             <p>
-                Your appointment with Dr. {appointmentViewModel.ActiveDoctor.DoctorName} on 
+                We regret to inform you that your appointment with {appointmentViewModel.ActiveDoctor.DoctorName} ({appointmentViewModel.ActiveDoctor.DoctorSpecialty}) on 
                 {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dd, MM, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}
                 has been canceled. </b>
             </p>
@@ -138,6 +140,46 @@ namespace OFMC_Booking_Platform.Services
 
 
 
+
+
+
+
+
+        // Defining a method that sends a cancellation Email notification to the client once the client cancels the appointment
+        public void SendPatientCancellationEmail(AppointmentViewModel appointmentViewModel)
+        {
+            var body = $@"
+
+            <p> <strong> Dear {appointmentViewModel.ActiveAppointment.PatientName} </p>
+
+
+            <p>
+               Your have successfully cancelled your appointment with {appointmentViewModel.ActiveDoctor.DoctorName}.
+               Below are the details of the appointment: 
+            </p>
+
+
+              <p>
+                <strong>Date & Time:</strong> <b>{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dddd, MMMM d, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}</b><br />
+                <strong>Doctor:</strong> Dr. {appointmentViewModel.ActiveDoctor.DoctorName} – {appointmentViewModel.ActiveDoctor.DoctorSpecialty}<br />
+                <strong>📍 Location:</strong> Oakridge Family Medical Center,<br />
+                1347 Willow Creek Rd, Maplewood, ON
+            </p>
+
+
+            <p>
+               If you wish to reschedule your appointment, please visit our platform or contact us at (555) 987-6543.
+            </p>
+
+            <p>
+                Best regards,<br />
+                <strong>Oakridge Family Medical Center</strong><br />
+                📞 (555) 987-6543 | ✉️ info@oakridgemedical.com
+            </p>";
+
+            SendEmail(appointmentViewModel.ActiveAppointment.AppointmentEmail, "Appointment Cancellation - Oakridge Family Medical Center", body);
+
+        }
 
 
     }

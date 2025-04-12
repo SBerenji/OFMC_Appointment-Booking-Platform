@@ -70,16 +70,6 @@ app.MapControllerRoute(
 
 
 
-
-
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Account}/{action=Register}/{id?}")
-//    .WithStaticAssets();
-
-
-
-
 // Load environment variables from .env
 DotNetEnv.Env.Load();
 

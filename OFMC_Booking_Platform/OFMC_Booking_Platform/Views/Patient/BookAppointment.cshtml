@@ -125,13 +125,18 @@
 
         updateContactFields(); // set initial state
 
-
-
-        // new Cleave('#phoneInput', {
-        //     phone: true,
-        //     phoneRegionCode: 'CA',
-        //     prefix: '+1',
-        //     noImmediatePrefix: false
-        // });
     });
 </script>
+
+
+@section Scripts {
+    <!-- Use the proper UMD version that defines Inputmask globally -->
+    <script src="https://unpkg.com/inputmask@5.0.8/dist/inputmask.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // This will now work because Inputmask is properly loaded
+            Inputmask("999-999-9999").mask(document.getElementById("phoneInput"));
+        });
+    </script>
+}

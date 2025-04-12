@@ -293,6 +293,35 @@ namespace OFMC_Booking_Platform.Controllers
 
             if (appointment != null)
             {
+
+                AppointmentViewModel appointmentViewModel = new AppointmentViewModel   // Initializing the appointment view model 
+                {
+                    ActiveAppointment = appointment,
+                    ActiveDoctor = appointment.Doctor,
+                    ActivePatient = appointment.Patient
+                };
+
+
+                // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
+                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
+                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+
+
+                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                if (appointment.ContactMethod == ContactMethod.Email)
+                {
+
+                    _emailService.SendPatientCancellationEmail(appointmentViewModel);
+                }
+
+
+                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
+                {
+                    _smsService.SendPatientCancellationSms(appointmentViewModel);
+                }
+
+
                 var slot = _healthcareDbContext.Availability
                     .FirstOrDefault(s => s.SlotDateTime == appointment.AppointmentDate && s.DoctorId == appointment.DoctorId);
 
