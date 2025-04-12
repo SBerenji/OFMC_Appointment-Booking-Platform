@@ -8,7 +8,8 @@ namespace OFMC_Booking_Platform.Services
 
         public void SendConfirmatioEmail(AppointmentViewModel appointment);
         public void SendAdminCancellationEmail(AppointmentViewModel appointment);
-
         public void SendPatientCancellationEmail(AppointmentViewModel appointmentViewModel);
+        public void SendPatientRescheduleConfirmationEmail(AppointmentViewModel appointmentViewModel);
+
     }
 }

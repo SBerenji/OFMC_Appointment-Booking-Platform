@@ -85,7 +85,7 @@ namespace OFMC_Booking_Platform.Services
 
             <p>
                 <strong>Date & Time:</strong> <b>{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dddd, MMMM d, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}</b><br />
-                <strong>Doctor:</strong> Dr. {appointmentViewModel.ActiveDoctor.DoctorName} – {appointmentViewModel.ActiveDoctor.DoctorSpecialty}<br />
+                <strong>Doctor:</strong> {appointmentViewModel.ActiveDoctor.DoctorName} – {appointmentViewModel.ActiveDoctor.DoctorSpecialty}<br />
                 <strong>📍 Location:</strong> Oakridge Family Medical Center,<br />
                 1347 Willow Creek Rd, Maplewood, ON
             </p>
@@ -161,7 +161,7 @@ namespace OFMC_Booking_Platform.Services
 
               <p>
                 <strong>Date & Time:</strong> <b>{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dddd, MMMM d, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}</b><br />
-                <strong>Doctor:</strong> Dr. {appointmentViewModel.ActiveDoctor.DoctorName} – {appointmentViewModel.ActiveDoctor.DoctorSpecialty}<br />
+                <strong>Doctor:</strong>{appointmentViewModel.ActiveDoctor.DoctorName} – {appointmentViewModel.ActiveDoctor.DoctorSpecialty}<br />
                 <strong>📍 Location:</strong> Oakridge Family Medical Center,<br />
                 1347 Willow Creek Rd, Maplewood, ON
             </p>
@@ -181,6 +181,50 @@ namespace OFMC_Booking_Platform.Services
 
         }
 
+
+
+
+        // Defining a method that sends a confirmation Email notification to the client once the client reschedules an appointment
+        public void SendPatientRescheduleConfirmationEmail(AppointmentViewModel appointmentViewModel)
+        {
+            var body = $@"
+
+            <p> <strong> Dear {appointmentViewModel.ActiveAppointment.PatientName} </p>
+
+
+                <p>
+                   You have successfully rescheduled your appointment with {appointmentViewModel.ActiveDoctor.DoctorName}.
+                   Below are the updated details: 
+                </p>
+
+
+                 <p>
+                    <strong>New Date & Time:</strong> <b>{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dddd, MMMM d, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}</b><br />
+                    <strong>Doctor:</strong> {appointmentViewModel.ActiveDoctor.DoctorName} – {appointmentViewModel.ActiveDoctor.DoctorSpecialty}<br />
+                    <strong>📍 Location:</strong> Oakridge Family Medical Center,<br />
+                    1347 Willow Creek Rd, Maplewood, ON
+                 </p>
+
+
+                <p>
+                    If you need to make further changes or have any questions, please contact us at (555) 987-6543 or send an email to the email address provided below.
+                </p>
+
+                 <p>
+                    Thank you for choosing Oakridge Family Medical Center. We look forward to seeing you!
+                </p>
+
+
+
+            <p>
+                Best regards,<br />
+                <strong>Oakridge Family Medical Center</strong><br />
+                📞 (555) 987-6543 | ✉️ info@oakridgemedical.com
+            </p>";
+
+            SendEmail(appointmentViewModel.ActiveAppointment.AppointmentEmail, "Appointment Reschedule - Oakridge Family Medical Center", body);
+
+        }
 
     }
 }

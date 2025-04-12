@@ -216,20 +216,42 @@ namespace OFMC_Booking_Platform.Controllers
                 appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
                     .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
 
-                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email)
+
+
+                // sending email and SMS notification based on contact method
+                switch (appointmentViewModel.ActiveAppointment.ContactMethod)
                 {
 
-                    _emailService.SendConfirmatioEmail(appointmentViewModel);
+                    // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                    case ContactMethod.Email:
+                        _emailService.SendConfirmatioEmail(appointmentViewModel);
+                        break;
+
+                    // Send a confirmation SMS message if the preferred contact method is set to 'Text' or 'Phone number' by the patient when booking the appointment
+                    case ContactMethod.Text:
+                    case ContactMethod.Phone:
+                        _smsService.SendConfirmationSms(appointmentViewModel);
+                        break;
                 }
 
 
-                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
-                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Text || appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Phone)
-                {
-                    _smsService.SendConfirmationSms(appointmentViewModel);
-                }
+
+                //// Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                //if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email)
+                //{
+
+                //    _emailService.SendConfirmatioEmail(appointmentViewModel);
+                //}
+
+
+                //// Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                //// Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                //if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Text || appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Phone)
+                //{
+                //    _smsService.SendConfirmationSms(appointmentViewModel);
+                //}
+
+
 
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllAppointments", "Healthcare");
@@ -283,6 +305,8 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
+
+        // Am action that enables patients to reschedule their appointment by freeing up the previous timeslot and booking a new one
         [Authorize(Roles = "Patient")]
         [HttpPost("/doctor/reschedule-appointment")]
         public async Task<IActionResult> RescheduleAppointment(AppointmentViewModel appointmentViewModel)
@@ -317,6 +341,28 @@ namespace OFMC_Booking_Platform.Controllers
                 existingAppointment.AppointmentDate = selectedSlot.SlotDateTime;
 
                 _healthcareDbContext.SaveChanges(); // saves the changes to the database
+
+
+                // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
+                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
+                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+
+
+                // sending email and SMS notification based on contact method
+                switch (appointmentViewModel.ActiveAppointment.ContactMethod)
+                {
+
+                    // Send a confirmation email for rescheduling if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                    case ContactMethod.Email:
+                        _emailService.SendPatientRescheduleConfirmationEmail(appointmentViewModel);
+                        break;
+
+                    // Send a confirmation SMS message for rescheduling  if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                    case ContactMethod.Text:
+                    case ContactMethod.Phone:
+                        _smsService.SendPatientRescheduleConfirmationSMS(appointmentViewModel);
+                        break;
+                }
 
 
                 // redirect to the GetAllDoctors 
@@ -471,19 +517,37 @@ namespace OFMC_Booking_Platform.Controllers
                     .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
 
 
-                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                if (appointment.ContactMethod == ContactMethod.Email)
+
+                // sending email and SMS notification based on contact method
+                switch (appointmentViewModel.ActiveAppointment.ContactMethod)
                 {
 
-                    _emailService.SendPatientCancellationEmail(appointmentViewModel);
+                    // Send a cancellation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                    case ContactMethod.Email:
+                        _emailService.SendPatientCancellationEmail(appointmentViewModel);
+                        break;
+
+                    // Send a cancellation SMS message if the preferred contact method is set to 'Text' or 'Phone number' by the patient when booking the appointment
+                    case ContactMethod.Text:
+                    case ContactMethod.Phone:
+                        _smsService.SendPatientCancellationSms(appointmentViewModel);
+                        break;
                 }
 
 
-                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
-                if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
-                {
-                    _smsService.SendPatientCancellationSms(appointmentViewModel);
-                }
+                //// Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                //if (appointment.ContactMethod == ContactMethod.Email)
+                //{
+
+                //    _emailService.SendPatientCancellationEmail(appointmentViewModel);
+                //}
+
+
+                //// Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                //if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
+                //{
+                //    _smsService.SendPatientCancellationSms(appointmentViewModel);
+                //}
 
 
                 var slot = _healthcareDbContext.Availability

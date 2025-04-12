@@ -135,19 +135,41 @@ namespace OFMC_Booking_Platform.Controllers
                     .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
 
 
-                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                if (appointment.ContactMethod == ContactMethod.Email)
+                // sending email and SMS notification based on contact method
+                switch (appointmentViewModel.ActiveAppointment.ContactMethod)
                 {
 
-                    _emailService.SendAdminCancellationEmail(appointmentViewModel);
+                    // Send a cancellation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                    case ContactMethod.Email:
+                        _emailService.SendAdminCancellationEmail(appointmentViewModel);
+                        break;
+
+                    // Send a cancellation SMS message if the preferred contact method is set to 'Text' or 'Phone number' by the patient when booking the appointment
+                    case ContactMethod.Text:
+                    case ContactMethod.Phone:
+                        _smsService.SendAdminCancellationSms(appointmentViewModel);
+                        break;
                 }
 
 
-                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
-                if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
-                {
-                    _smsService.SendAdminCancellationSms(appointmentViewModel);
-                }
+
+
+                //// Send a cancellation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                //if (appointment.ContactMethod == ContactMethod.Email)
+                //{
+
+                //    _emailService.SendAdminCancellationEmail(appointmentViewModel);
+                //}
+
+
+                //// Send a cancellation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                //if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
+                //{
+                //    _smsService.SendAdminCancellationSms(appointmentViewModel);
+                //}
+
+
+
 
                 Availability slot = _healthcareDbContext.Availability
                     .FirstOrDefault(s => s.SlotDateTime == appointment.AppointmentDate && s.DoctorId == appointment.DoctorId);
