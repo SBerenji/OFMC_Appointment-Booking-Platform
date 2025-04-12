@@ -9,6 +9,7 @@
 
     <div class="d-flex justify-content-end mb-3">
         <form asp-controller="Account" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
             <button type="submit" class="btn btn-outline-secondary">Log Out</button>
         </form>
     </div>

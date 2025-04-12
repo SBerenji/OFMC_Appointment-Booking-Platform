@@ -168,5 +168,15 @@ namespace OFMC_Booking_Platform.Controllers
             // going back to the login form.
             return View(LoginInfo);
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await this._signInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
