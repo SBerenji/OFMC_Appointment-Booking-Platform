@@ -5,6 +5,8 @@
     ViewData["Title"] = "Book Appointment";
 }
 
+
+
 <h1 class="display-4">Book your appointment</h1>
 
 <p><strong>Book your appointment with @Model.ActiveDoctor.DoctorName</strong></p>
@@ -42,18 +44,41 @@
     
     </div>
 
-    <div class="form-group">
+
+    <!-- Email Address Field that is initially hidden -->
+    <div class="form-group" id="emailField" style="display:none;">
         <label asp-for="ActiveAppointment.AppointmentEmail">Email Address</label>
-        <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" />
+        <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" id="emailInput" />
     </div>
+
+
+
+    <!-- Phone Number Field that is initially hidden -->
+    <div class="form-group" id="phoneField" style="display:none;">
+        <label asp-for="ActiveAppointment.AppointmentPhone">Phone Number</label>
+        <input type="text" asp-for="ActiveAppointment.AppointmentPhone" class="form-control" id="phoneInput" />
+        
+    </div>
+
+    @* <div class="form-group"> *@
+    @*     <label asp-for="ActiveAppointment.AppointmentEmail">Email Address</label> *@
+    @*     <input type="text" asp-for="ActiveAppointment.AppointmentEmail" class="form-control" /> *@
+    @* </div> *@
+
+    @* <div class="form-group"> *@
+    @*     <label asp-for="ActiveAppointment.AppointmentPhone">Phone Number</label> *@
+    @*     <input type="text" asp-for="ActiveAppointment.AppointmentPhone" class="form-control" /> *@
+    @* </div> *@
+
+
 
     <div class="form-group">
         What is your preferred method of contact?
-        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Email)" checked="" />
+        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Email)" id = "contactEmail" checked="" />
         <label>  Email  </label>
-        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Phone)" />
+        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Phone)" id = "contactPhone"  />
         <label>  Phone  </label>
-        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Text)" />
+        <input type="radio" name="ActiveAppointment.ContactMethod" value="@nameof(ContactMethod.Text) " id="contactText" />
         <label>  Text  </label>
     </div>
 
@@ -65,3 +90,48 @@
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-secondary">Cancel</a>
 </form>
+
+
+<!-- A JS plugin used for automatic filling of the phone number field in a specific format -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+
+
+<!-- JavaScript code that would be used to hide and appear the contact method field based on the radio buttons selects -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var contactEmail = document.getElementById('contactEmail');
+        var contactPhone = document.getElementById('contactPhone');
+        var contactText = document.getElementById('contactText');
+        var emailField = document.getElementById('emailField');
+        var phoneField = document.getElementById('phoneField');
+
+
+        // The default checked contact method would be Email and the initial state is set based on this
+        function updateContactFields() {
+            if (contactEmail.checked) {
+                emailField.style.display = 'block';
+                phoneField.style.display = 'none';
+            } else {
+                emailField.style.display = 'none';
+                phoneField.style.display = 'block';
+            }
+        }
+
+
+        // Add event listeners to update the visibility of preferred contact method fields
+        contactEmail.addEventListener('change', updateContactFields);
+        contactPhone.addEventListener('change', updateContactFields);
+        contactText.addEventListener('change', updateContactFields);
+
+        updateContactFields(); // set initial state
+
+
+
+        // new Cleave('#phoneInput', {
+        //     phone: true,
+        //     phoneRegionCode: 'CA',
+        //     prefix: '+1',
+        //     noImmediatePrefix: false
+        // });
+    });
+</script>

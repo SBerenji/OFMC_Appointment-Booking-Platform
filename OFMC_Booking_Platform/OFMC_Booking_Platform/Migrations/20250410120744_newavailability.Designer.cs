@@ -12,8 +12,8 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    [Migration("20250408142412_Account")]
-    partial class Account
+    [Migration("20250410120744_newavailability")]
+    partial class newavailability
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,7 +174,9 @@ namespace OFMC_Booking_Platform.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("AppointmentEmail")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppointmentPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContactMethod")
@@ -205,6 +207,7 @@ namespace OFMC_Booking_Platform.Migrations
                             AppointmentId = 1,
                             AppointmentDate = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentEmail = "sierraerb25@gmail.com",
+                            AppointmentPhone = "+15483335882",
                             ContactMethod = 0,
                             DoctorId = 1,
                             Notes = "Headache",
@@ -295,6 +298,69 @@ namespace OFMC_Booking_Platform.Migrations
                         {
                             SlotId = 9,
                             DoctorId = 3,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 10,
+                            DoctorId = 4,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 11,
+                            DoctorId = 4,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 12,
+                            DoctorId = 4,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 13,
+                            DoctorId = 5,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 14,
+                            DoctorId = 5,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 15,
+                            DoctorId = 5,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 16,
+                            DoctorId = 6,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 17,
+                            DoctorId = 6,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 18,
+                            DoctorId = 6,
                             IsBooked = false,
                             SlotDateTime = new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         });

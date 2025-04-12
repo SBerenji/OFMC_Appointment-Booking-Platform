@@ -2,6 +2,7 @@
 using OFMC_Booking_Platform.Entities;
 using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Models;
+using OFMC_Booking_Platform.Services;
 using System.IO;
 
 namespace OFMC_Booking_Platform.Controllers
@@ -9,9 +10,11 @@ namespace OFMC_Booking_Platform.Controllers
     public class HealthcareController : Controller //controller for the healthcare information 
     {
         // constructor - tells the DI container that this controller needs a DB context 
-        public HealthcareController(HealthcareDbContext healthcareDbContext)
+        public HealthcareController(HealthcareDbContext healthcareDbContext, IEmailService emailService, ISmsService smsService)
         {
             _healthcareDbContext = healthcareDbContext; //intitalizes the controller with a reference to the HealthcareDbContext
+            _emailService = emailService; // injecting the email service
+            _smsService = smsService;   // injecting the sms service
         }
 
         // GET handler for the list of all of the doctors
@@ -30,9 +33,12 @@ namespace OFMC_Booking_Platform.Controllers
         [HttpGet("/appointments")] //specifies the URL - GET handler for the list of all of the appointments
         public IActionResult GetAllAppointments()
         {
+            int patientId = 1;
+
             //retrieves a list of appointments from the database
             List<Appointment> appointments = _healthcareDbContext.Appointment
                 .Include(m => m.Doctor) // Include the related Doctor data
+                .Where(m => m.PatientId == patientId)
                 .ToList();
 
             return View("../Patient/Appointments", appointments);  //returns the list of appointments to the view using the view name
@@ -43,6 +49,12 @@ namespace OFMC_Booking_Platform.Controllers
         [HttpGet("/doctor/book-appointment-form")] //specifies the URL - GET handler for the blank add form
         public IActionResult GetAppointmentForm(int id)
         {
+
+            int patientID = 1;
+            Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+            string patientName = patient?.FirstName + " " + patient?.LastName;
+
+
             // tries to find doctor with the id from the database
             Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == id).FirstOrDefault();
 
@@ -51,13 +63,17 @@ namespace OFMC_Booking_Platform.Controllers
                 .OrderBy(a => a.SlotDateTime)
                 .ToList();
 
-
             // populates the appointmentViewModel with the existing doctor info 
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
             {
                 ActiveDoctor = doctor,
+                ActivePatient = patient,
                 Availability = availableSlots,
                 ActiveAppointment = new Appointment()
+                {
+                    PatientName = patientName,
+                    AppointmentEmail = patient?.PatientEmail
+                }
             };
 
             // return that appointmentViewModel to the view
@@ -93,7 +109,7 @@ namespace OFMC_Booking_Platform.Controllers
         [HttpPost("/doctor/book-appointment")]
         public IActionResult BookAppointment(AppointmentViewModel appointmentViewModel)
         {
-            
+
             //retrieves doctor id, and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
             appointmentViewModel.ActiveAppointment.PatientId = 1; //set to 1 for now until we have different patients 
@@ -108,9 +124,30 @@ namespace OFMC_Booking_Platform.Controllers
                 _healthcareDbContext.Appointment.Add(appointmentViewModel.ActiveAppointment);   // add the appointment information in the database 
 
                 _healthcareDbContext.SaveChanges(); // saves the changes to the database
-                
+
+
+                // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
+                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
+                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+
+                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email) 
+                {
+
+                    _emailService.SendConfirmatioEmail(appointmentViewModel);
+                }
+
+
+                // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
+                // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
+                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Text || appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Phone)
+                {
+                    _smsService.SendConfirmationSms(appointmentViewModel);
+                }
+
                 // redirect to the GetAllDoctors
                 return RedirectToAction("GetAllDoctors", "Healthcare");
+
             }
             else
             {
@@ -134,6 +171,10 @@ namespace OFMC_Booking_Platform.Controllers
                 return View("../Patient/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
             }
         }
+
+
+
+
 
         [HttpPost("/doctor/reschedule-appointment")]
         public IActionResult RescheduleAppointment(AppointmentViewModel appointmentViewModel)
@@ -211,7 +252,32 @@ namespace OFMC_Booking_Platform.Controllers
             if (appointment == null)
                 return NotFound();
 
-            return View("../Healthcare/AppointmentInfo", appointment);
+            return View("../Patient/AppointmentInfo", appointment);
+        }
+
+
+        [HttpGet("/appointment/cancel-form")] //specifies the URL - GET handler for the blank reschedule form
+        public IActionResult GetCanceltForm(int id)
+        {
+            // tries to find appointment and doctor with the id from the database
+            Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == id).FirstOrDefault();
+            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+
+            //gets list of available slots for that doctor
+            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
+                .OrderBy(a => a.SlotDateTime)
+                .ToList();
+
+            // populates the appointmentViewModel with the existing appointment info and doctor
+            AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
+            {
+                ActiveDoctor = doctor,
+                ActiveAppointment = appointment,
+                Availability = availableSlots
+            };
+
+            // return that appointmentViewModel to the view
+            return View("../Patient/CancelConfirmation", appointmentViewModel);
         }
 
         /// <summary>
@@ -260,5 +326,8 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
+        private readonly IEmailService _emailService;  
+        private readonly ISmsService _smsService;
+
     }
 }
