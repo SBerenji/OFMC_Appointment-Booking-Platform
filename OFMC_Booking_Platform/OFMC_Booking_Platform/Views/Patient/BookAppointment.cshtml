@@ -17,6 +17,12 @@
 
 
     <input type="hidden" asp-for="ActiveDoctor.DoctorId" />
+    <input type="hidden" asp-for="ActivePatient.PatientId" />
+    <input type="hidden" asp-for="ActivePatient.FirstName" />
+    <input type="hidden" asp-for="ActivePatient.LastName" />
+    <input type="hidden" asp-for="ActivePatient.DOB" />
+    <input type="hidden" asp-for="ActivePatient.PatientEmail" />
+    <input type="hidden" asp-for="ActivePatient.UserId" />
 
 
     <div class="form-group">
@@ -129,14 +135,23 @@
 </script>
 
 
+
+
 @section Scripts {
-    <!-- Use the proper UMD version that defines Inputmask globally -->
+    <!-- Use the proper UMD version that defines `Inputmask` globally -->
+
     <script src="https://unpkg.com/inputmask@5.0.8/dist/inputmask.min.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // This will now work because Inputmask is properly loaded
-            Inputmask("999-999-9999").mask(document.getElementById("phoneInput"));
+
+            Inputmask({
+                mask: "+1999-999-9999",
+                placeholder: "_",
+                showMaskOnHover: false,
+                showMaskOnFocus: true
+            }).mask(document.getElementById("phoneInput"));
+
         });
     </script>
 }

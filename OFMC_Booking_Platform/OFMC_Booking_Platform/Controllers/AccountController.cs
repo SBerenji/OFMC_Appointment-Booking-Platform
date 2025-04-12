@@ -14,11 +14,15 @@ namespace OFMC_Booking_Platform.Controllers
         // UserManager instance is injected for registration.
         private readonly UserManager<User> _userManager;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+        private readonly HealthcareDbContext _healthcareDbContext;
+
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, HealthcareDbContext healthcareDbContext)
         {
             this._signInManager = signInManager;
 
             this._userManager = userManager;
+
+            this._healthcareDbContext = healthcareDbContext;
         }
 
         public IActionResult Index()
@@ -56,7 +60,7 @@ namespace OFMC_Booking_Platform.Controllers
                     };
 
                     // Needs to be Linked.
-                    return RedirectToAction("Index", "HealthCare");
+                    return RedirectToAction("GetAllAppointments", "HealthCare");
                 }
 
                 else
@@ -82,7 +86,7 @@ namespace OFMC_Booking_Platform.Controllers
                 newUser.FirstName = RegistrationInfo.FirstName;
                 newUser.LastName = RegistrationInfo.LastName;
                 newUser.DateOfBirth = RegistrationInfo.DateOfBirth;
-                newUser.PhoneNumber = RegistrationInfo.PhoneNumber;
+                newUser.PhoneNumber = RegistrationInfo.PhoneNumber.Replace("-", "");
                 newUser.Email = RegistrationInfo.Email;
 
                 // Here we attempt to register the new account.
@@ -95,9 +99,23 @@ namespace OFMC_Booking_Platform.Controllers
                         await this._userManager.AddToRoleAsync(newUser, "Patient");
                     }
 
+                    var newPatient = new Patient
+                    {
+                        UserId = newUser.Id,
+                        PatientEmail = newUser.Email,
+                        FirstName = newUser.FirstName,
+                        LastName = newUser.LastName,
+                        DOB = newUser.DateOfBirth
+                    };
+
+                    _healthcareDbContext.Patient.Add(newPatient);
+                    await _healthcareDbContext.SaveChangesAsync();
+
+
+
                     await this._signInManager.SignInAsync(newUser, true);
 
-                    return RedirectToAction("Index", "Healthcare");
+                    return RedirectToAction("GetAllAppointments", "Healthcare");
                 }
 
                 else
