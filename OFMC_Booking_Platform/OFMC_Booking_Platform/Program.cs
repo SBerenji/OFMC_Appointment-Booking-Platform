@@ -35,7 +35,10 @@ builder.Services.AddDefaultIdentity<User>(
 .AddEntityFrameworkStores<HealthcareDbContext>();
 
 
-// registring the email service
+// registering the Admin Service.
+builder.Services.AddScoped<IAdminService, AdminService>();
+
+// registering the email service
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 // registering the SMS service
