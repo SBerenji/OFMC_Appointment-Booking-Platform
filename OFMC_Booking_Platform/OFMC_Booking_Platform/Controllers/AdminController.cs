@@ -25,7 +25,7 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
         // GET handler for the list of all of the doctors on the admin side
-        [Authorize(Roles = "Admin")
+        [Authorize(Roles = "Admin")]
         [HttpGet("/doctorsList")] //specifies the URL - GET handler for the list of all of the doctors
 
         public IActionResult GetDoctorsList()
