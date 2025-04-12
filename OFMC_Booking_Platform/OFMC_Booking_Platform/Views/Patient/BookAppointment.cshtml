@@ -17,6 +17,14 @@
 
 
     <input type="hidden" asp-for="ActiveDoctor.DoctorId" />
+    <input type="hidden" asp-for="ActivePatient.PatientId" />
+    <input type="hidden" asp-for="ActivePatient.FirstName" />
+    <input type="hidden" asp-for="ActivePatient.LastName" />
+    <input type="hidden" asp-for="ActivePatient.DOB" />
+    <input type="hidden" asp-for="ActivePatient.PatientEmail" />
+    <input type="hidden" asp-for="ActivePatient.UserId" />
+
+
 
 
     <div class="form-group">
@@ -88,7 +96,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-secondary">Cancel</a>
 </form>
 
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Models;
 using OFMC_Booking_Platform.Services;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OFMC_Booking_Platform.Controllers
 {
@@ -30,39 +31,74 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         // GET handler for the list of all of the appointments
+        [Authorize(Roles = "Patient")]
         [HttpGet("/appointments")] //specifies the URL - GET handler for the list of all of the appointments
-        public IActionResult GetAllAppointments()
+        public async Task<IActionResult> GetAllAppointments()
         {
-            int patientId = 1;
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(); // or redirect to login
+            }
+
+            var patient = await _healthcareDbContext.Patient
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (patient == null)
+            {
+                return NotFound("Patient not found");
+            }
 
             //retrieves a list of appointments from the database
+            
             List<Appointment> appointments = _healthcareDbContext.Appointment
                 .Include(m => m.Doctor) // Include the related Doctor data
-                .Where(m => m.PatientId == patientId)
+                .Where(m => m.PatientId == patient.PatientId)
                 .ToList();
 
-            return View("../Patient/Appointments", appointments);  //returns the list of appointments to the view using the view name
+            AppointmentsModel appointmentsmodel = new AppointmentsModel()
+            {
+                Patient = patient,
+                Appointments = appointments
+            };
+
+            return View("../Patient/Appointments", appointmentsmodel);  //returns the list of appointments to the view using the view name
         }
 
-        [HttpGet("/appointments/history")]
-        public IActionResult GetAppointmentHistory()
-        {
-            var history = _healthcareDbContext.Appointment
-                .Include(a => a.Doctor)
-                .Where(a => a.AppointmentDate < DateTime.Now && a.PatientId == 1) // mock for Sara
-                .OrderByDescending(a => a.AppointmentDate)
-                .ToList();
+        //[HttpGet("/appointments/history")]
+        //public IActionResult GetAppointmentHistory()
+        //{
+        //    var history = _healthcareDbContext.Appointment
+        //        .Include(a => a.Doctor)
+        //        .Where(a => a.AppointmentDate < DateTime.Now && a.PatientId == 1) // mock for Sara
+        //        .OrderByDescending(a => a.AppointmentDate)
+        //        .ToList();
 
-            return View("../Patient/AppointmentHistory", history);
-        }
+        //    return View("../Patient/AppointmentHistory", history);
+        //}
 
-
+        [Authorize(Roles = "Patient")]
         [HttpGet("/doctor/book-appointment-form")] //specifies the URL - GET handler for the blank add form
-        public IActionResult GetAppointmentForm(int id)
+        public async Task<IActionResult> GetAppointmentForm(int id)
         {
 
-            int patientID = 1;
-            Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(); // or redirect to login
+            }
+
+            var patient = await _healthcareDbContext.Patient
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (patient == null)
+            {
+                return NotFound("Patient not found");
+            }
+
+           // Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
             string patientName = patient?.FirstName + " " + patient?.LastName;
 
 
@@ -92,9 +128,30 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
+        [Authorize(Roles = "Patient")]
         [HttpGet("/doctor/reschedule-appointment-form")] //specifies the URL - GET handler for the blank reschedule form
-        public IActionResult GetRescheduleAppointmentForm(int id)
+        public async Task<IActionResult> GetRescheduleAppointmentForm(int id)
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(); // or redirect to login
+            }
+
+            var patient = await _healthcareDbContext.Patient
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (patient == null)
+            {
+                return NotFound("Patient not found");
+            }
+
+            // Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+            string patientName = patient?.FirstName + " " + patient?.LastName;
+
+
+
             // tries to find appointment and doctor with the id from the database
             Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == id).FirstOrDefault();
             Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
@@ -107,6 +164,7 @@ namespace OFMC_Booking_Platform.Controllers
             // populates the appointmentViewModel with the existing appointment info and doctor
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
             {
+                ActivePatient = patient,
                 ActiveDoctor = doctor,
                 ActiveAppointment = appointment,
                 Availability = availableSlots
@@ -117,21 +175,22 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
         //POST handler that enables adding a appointment 
+        [Authorize(Roles = "Patient")]
         [HttpPost("/doctor/book-appointment")]
-        public IActionResult BookAppointment(AppointmentViewModel appointmentViewModel)
+        public async Task<IActionResult> BookAppointment(AppointmentViewModel appointmentViewModel)
         {
 
             //retrieves doctor id, and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
-            appointmentViewModel.ActiveAppointment.PatientId = 1; //set to 1 for now until we have different patients 
+            appointmentViewModel.ActiveAppointment.PatientId = appointmentViewModel.ActivePatient.PatientId; //set to 1 for now until we have different patients 
 
             if (ModelState.IsValid) //enter this if model state is valid 
             {
                 //Get the selected slot from the database
-                Availability? selectedSlot = _healthcareDbContext.Availability.Where(a => a.SlotDateTime == appointmentViewModel.ActiveAppointment.AppointmentDate).Where(a=> a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
+                Availability? selectedSlot = _healthcareDbContext.Availability.Where(a => a.SlotDateTime == appointmentViewModel.ActiveAppointment.AppointmentDate).Where(a => a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
 
                 selectedSlot.IsBooked = true; // Mark the slot as booked
-                
+
                 _healthcareDbContext.Appointment.Add(appointmentViewModel.ActiveAppointment);   // add the appointment information in the database 
 
                 _healthcareDbContext.SaveChanges(); // saves the changes to the database
@@ -142,7 +201,7 @@ namespace OFMC_Booking_Platform.Controllers
                     .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
 
                 // Send a confirmation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email) 
+                if (appointmentViewModel.ActiveAppointment.ContactMethod == ContactMethod.Email)
                 {
 
                     _emailService.SendConfirmatioEmail(appointmentViewModel);
@@ -157,11 +216,30 @@ namespace OFMC_Booking_Platform.Controllers
                 }
 
                 // redirect to the GetAllDoctors
-                return RedirectToAction("GetAllDoctors", "Healthcare");
+                return RedirectToAction("GetAllAppointments", "Healthcare");
 
             }
             else
             {
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized(); // or redirect to login
+                }
+
+                var patient = await _healthcareDbContext.Patient
+                    .FirstOrDefaultAsync(p => p.UserId == userId);
+
+                if (patient == null)
+                {
+                    return NotFound("Patient not found");
+                }
+
+                // Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+                string patientName = patient?.FirstName + " " + patient?.LastName;
+
+
                 // tries to find doctor with the id from the database
                 Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
 
@@ -170,32 +248,37 @@ namespace OFMC_Booking_Platform.Controllers
                     .OrderBy(a => a.SlotDateTime)
                     .ToList();
 
-
                 // populates the appointmentViewModel with the existing doctor info 
-                AppointmentViewModel newappointmentViewModel = new AppointmentViewModel()
+                AppointmentViewModel appointmentViewModelNew = new AppointmentViewModel()
                 {
                     ActiveDoctor = doctor,
+                    ActivePatient = patient,
                     Availability = availableSlots,
                     ActiveAppointment = new Appointment()
+                    {
+                        PatientName = patientName,
+                        AppointmentEmail = patient?.PatientEmail
+                    }
                 };
 
-                return View("../Patient/BookAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Add view
+                // return that appointmentViewModel to the view
+                return View("../Patient/BookAppointment", appointmentViewModelNew);
             }
         }
 
 
 
 
-
+        [Authorize(Roles = "Patient")]
         [HttpPost("/doctor/reschedule-appointment")]
-        public IActionResult RescheduleAppointment(AppointmentViewModel appointmentViewModel)
+        public async Task<IActionResult> RescheduleAppointment(AppointmentViewModel appointmentViewModel)
         {
             //Load the existing appointment from the database based on the id
             Appointment? existingAppointment = _healthcareDbContext.Appointment.Where(a => a.AppointmentId == appointmentViewModel.ActiveAppointment.AppointmentId).FirstOrDefault();
-            
+
             //set the doctor id and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
-            appointmentViewModel.ActiveAppointment.PatientId = 1; //set to 1 for now since we only have 1 patient
+            appointmentViewModel.ActiveAppointment.PatientId = appointmentViewModel.ActivePatient.PatientId; //set to 1 for now until we have different patients 
 
 
             if (ModelState.IsValid) //enter this if model state is valid 
@@ -223,12 +306,32 @@ namespace OFMC_Booking_Platform.Controllers
 
 
                 // redirect to the GetAllDoctors 
-                return RedirectToAction("GetAllDoctors", "Healthcare");
+                return RedirectToAction("GetAllAppointments", "Healthcare");
             }
             else
             {
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized(); // or redirect to login
+                }
+
+                var patient = await _healthcareDbContext.Patient
+                    .FirstOrDefaultAsync(p => p.UserId == userId);
+
+                if (patient == null)
+                {
+                    return NotFound("Patient not found");
+                }
+
+                // Patient? patient = _healthcareDbContext.Patient.Where(p => p.PatientId == patientID).FirstOrDefault();
+                string patientName = patient?.FirstName + " " + patient?.LastName;
+
+
+
                 // tries to find appointment and doctor with the id from the database
-                Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == appointmentViewModel.ActiveAppointment.AppointmentId).FirstOrDefault();
+                Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
                 Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
 
                 //gets list of available slots for that doctor
@@ -237,14 +340,16 @@ namespace OFMC_Booking_Platform.Controllers
                     .ToList();
 
                 // populates the appointmentViewModel with the existing appointment info and doctor
-                AppointmentViewModel newappointmentViewModel = new AppointmentViewModel()
+                AppointmentViewModel appointmentViewModelNew = new AppointmentViewModel()
                 {
+                    ActivePatient = patient,
                     ActiveDoctor = doctor,
                     ActiveAppointment = appointment,
                     Availability = availableSlots
                 };
 
-                return View("../Patient/RescheduleAppointment", newappointmentViewModel);  // model is invalid so show errors and load the Edit view
+                // return that appointmentViewModel to the view
+                return View("../Patient/RescheduleAppointment", appointmentViewModel);
             }
         }
 
@@ -253,12 +358,28 @@ namespace OFMC_Booking_Platform.Controllers
         /// </summary>
         /// <param name="id">The appointment ID</param>
         /// <returns>The appointment info view</returns>
+        [Authorize(Roles = "Patient")]
         [HttpGet("/appointment/info")]
-        public IActionResult AppointmentInfo(int id)
+        public async Task<IActionResult> AppointmentInfo(int id)
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(); // or redirect to login
+            }
+
+            var patient = await _healthcareDbContext.Patient
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (patient == null)
+            {
+                return NotFound("Patient not found");
+            }
+
             var appointment = _healthcareDbContext.Appointment
                 .Include(a => a.Doctor)
-                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1); // Just temporary since we dont have login ready yet
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == patient.PatientId); // Just temporary since we dont have login ready yet
 
             if (appointment == null)
                 return NotFound();
@@ -266,7 +387,7 @@ namespace OFMC_Booking_Platform.Controllers
             return View("../Patient/AppointmentInfo", appointment);
         }
 
-
+        [Authorize(Roles = "Patient")]
         [HttpGet("/appointment/cancel-form")] //specifies the URL - GET handler for the blank reschedule form
         public IActionResult GetCanceltForm(int id)
         {
@@ -296,11 +417,28 @@ namespace OFMC_Booking_Platform.Controllers
         /// </summary>
         /// <param name="id">The appointment ID</param>
         /// <returns>Redirects to Appointments view</returns>
+        [Authorize(Roles = "Patient")]
         [HttpPost("/appointment/cancel")]
-        public IActionResult CancelAppointment(int id)
+        public async Task<IActionResult> CancelAppointment(int id)
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(); // or redirect to login
+            }
+
+            var patient = await _healthcareDbContext.Patient
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (patient == null)
+            {
+                return NotFound("Patient not found");
+            }
+
+
             var appointment = _healthcareDbContext.Appointment
-                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1);
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == patient.PatientId);
 
             if (appointment != null)
             {
@@ -321,12 +459,28 @@ namespace OFMC_Booking_Platform.Controllers
         /// <summary>
         /// Displays a confirmation page before cancelling an appointment.
         /// </summary>
+        [Authorize(Roles = "Patient")]
         [HttpGet("/appointment/cancel-confirmation")]
-        public IActionResult ConfirmCancelAppointment(int id)
+        public async Task<IActionResult> ConfirmCancelAppointment(int id)
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(); // or redirect to login
+            }
+
+            var patient = await _healthcareDbContext.Patient
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (patient == null)
+            {
+                return NotFound("Patient not found");
+            }
+
             var appointment = _healthcareDbContext.Appointment
                 .Include(a => a.Doctor)
-                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == 1);
+                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == patient.PatientId);
 
             if (appointment == null)
                 return NotFound();
