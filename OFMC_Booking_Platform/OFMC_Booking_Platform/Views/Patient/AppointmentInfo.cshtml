@@ -1,0 +1,41 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model Appointment
+
+@{
+    ViewData["Title"] = "Appointment Info";
+}
+
+<a asp-controller="Healthcare" asp-action="GetAllAppointments">Return to Appointments</a>
+
+<h1 class="display-4">Appointment Info</h1>
+
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+
+        <div class="row">
+            <!-- Left Column: Patient Info -->
+            <div class="col-md-6 mb-3">
+                <h5 class="mb-3">Patient Information</h5>
+                <p><strong>Name:</strong> @Model.PatientName</p>
+                <p><strong>Email:</strong> @Model.AppointmentEmail</p>
+                <p><strong>Preferred Contact:</strong> @Model.ContactMethod</p>
+                <p><strong>Appointment Date & Time:</strong> @Model.AppointmentDate?.ToString("f")</p>
+                <p><strong>Reason for Visit:</strong> @Model.Notes</p>
+            </div>
+
+            <!-- Right Column: Doctor Info -->
+            <div class="col-md-6 mb-3">
+                <h5 class="mb-3">Doctor Information</h5>
+                <p><strong>Name:</strong> @Model.Doctor?.DoctorName</p>
+                <p><strong>Specialty:</strong> @Model.Doctor?.DoctorSpecialty</p>
+                <p><strong>Extension:</strong> @Model.Doctor?.DoctorExt</p>
+                <p><strong>Phone:</strong> (555) 987-6543 (EXT. @Model.Doctor?.DoctorExt)</p>
+                <p><strong>Address:</strong> 1347 Willow Creek Rd, Maplewood, ON</p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-outline-primary">Return to Appointments</a>
+        </div>
+    </div>
+</div>
