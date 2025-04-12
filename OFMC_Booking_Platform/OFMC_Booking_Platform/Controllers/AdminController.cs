@@ -10,14 +10,14 @@ namespace OFMC_Booking_Platform.Controllers
     public class AdminController : Controller
     {
 
-        private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
+        private readonly IAdminService _adminService; //private HealthcareDbContext variable
         private readonly IEmailService _emailService;
         private readonly ISmsService _smsService;
 
         // constructor - tells the DI container that this controller needs a DB context, as well access to the email and sms services
-        public AdminController(HealthcareDbContext healthcareDbContext, IEmailService emailService, ISmsService smsService)
+        public AdminController(IAdminService adminService, IEmailService emailService, ISmsService smsService)
         {
-            _healthcareDbContext = healthcareDbContext; //intitalizes the controller with a reference to the HealthcareDbContext
+            this._adminService = adminService;   // references the admin service for database related operations.
 
             // references the notification services
             _emailService = emailService;   
@@ -28,23 +28,20 @@ namespace OFMC_Booking_Platform.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet("/doctorsList")] //specifies the URL - GET handler for the list of all of the doctors
 
-        public IActionResult GetDoctorsList()
+        public async Task<IActionResult> GetDoctorsList()
         {
             //retrieves a list of doctors from the database
-            List<Doctor> doctors = _healthcareDbContext.Doctor.ToList();
-
-            return View("../Admin/DoctorList", doctors);  //returns the list of doctors to the view using the view name
+            return View("../Admin/DoctorList", await this._adminService.GetAllDoctors());  //returns the list of doctors to the view using the view name
         }
 
 
         // Defining an action that gets all the appointments associated with a doctor and returns to the viewmodel
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult GetDoctorAppointments(int doctorId)
+        public async Task<IActionResult> GetDoctorAppointments(int doctorId)
         {
-            Doctor doctor = _healthcareDbContext.Doctor  // finding the doctor based on the doctor id passed to the action
-                .Include(d => d.Appointments)
-                .FirstOrDefault(d => d.DoctorId == doctorId);
+                                                                                                      // Calling the admin service to fetch doctor and appointments from DB.
+            Doctor? doctor = await this._adminService.GetDoctorByIDAndIncludeAppointments(doctorId);  // finding the doctor based on the doctor id passed to the action
 
             if (doctor == null)
             {
@@ -75,11 +72,9 @@ namespace OFMC_Booking_Platform.Controllers
         // defining an action that gets the information of the patient associated with an appointment 
         [Authorize(Roles = "Admin")]
         [HttpGet("/doctorAppointmentDetails")]
-        public IActionResult GetAppointmentDetails(int appointmentId)
+        public async Task<IActionResult> GetAppointmentDetails(int appointmentId)
         {
-            Appointment appointment = _healthcareDbContext.Appointment
-                 .Include(a => a.Doctor)
-                 .FirstOrDefault(a => a.AppointmentId == appointmentId);  // find the specific appointment of the patient
+            Appointment? appointment = await this._adminService.GetAppointmentsByIDAndIncludeDoctor(appointmentId);  // find the specific appointment of the patient
 
             if (appointment == null)
                 return NotFound();
@@ -91,13 +86,10 @@ namespace OFMC_Booking_Platform.Controllers
         // Defining an action that returns the patient appointment cancel form for admin
         [Authorize(Roles = "Admin")]
         [HttpGet("/admin/cancelAppointmentForm")]
-        public IActionResult GetCancelAppointmentForm(int appointmentId)
+        public async Task<IActionResult> GetCancelAppointmentForm(int appointmentId)
         {
 
-            Appointment appointment = _healthcareDbContext.Appointment  // finding the appointment with the specific id passed
-             .Include(a => a.Doctor)
-             .Include(a => a.Patient)
-             .FirstOrDefault(a => a.AppointmentId == appointmentId);
+            Appointment? appointment = await this._adminService.GetAppointmentsByIDAndIncludeDoctorAndPatient(appointmentId);  // finding the appointment with the specific id passed
 
             if (appointment == null)
             {
@@ -120,10 +112,9 @@ namespace OFMC_Booking_Platform.Controllers
         // Defining an action that removes the appointment of the patient from the database
         [Authorize(Roles = "Admin")]
         [HttpPost("/admin/cancelAppointment")]
-        public IActionResult CancelPatientAppointment(int appointmentId)
+        public async Task<IActionResult> CancelPatientAppointment(int appointmentId)
         {
-            var appointment = _healthcareDbContext.Appointment
-            .FirstOrDefault(a => a.AppointmentId == appointmentId); // find the specific appointment of the patient
+            Appointment? appointment = await this._adminService.GetAppointmentById(appointmentId);  // find the specific appointment of the patient
 
             if (appointment != null)
             {
@@ -137,9 +128,8 @@ namespace OFMC_Booking_Platform.Controllers
                 };
 
 
-                // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
-                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
-                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+                // Get the doctor from the database using AdminService to populate ActiveDoctor from the AppointmentViewModel.
+                appointmentViewModel.ActiveDoctor = await this._adminService.GetDoctorById(appointmentViewModel.ActiveDoctor.DoctorId);
 
 
                 // sending email and SMS notification based on contact method
@@ -160,14 +150,12 @@ namespace OFMC_Booking_Platform.Controllers
 
 
 
-                Availability slot = _healthcareDbContext.Availability
-                    .FirstOrDefault(s => s.SlotDateTime == appointment.AppointmentDate && s.DoctorId == appointment.DoctorId);
+                Availability? slot = await this._adminService.GetDoctorAvailabilityBasedOnAppointmentDateAndDoctorId(appointment.AppointmentDate, appointment.DoctorId);
 
                 if (slot != null)
-                    slot.IsBooked = false;   // free up the availability of the slot for other patients once this slot is canceleted
+                    slot.IsBooked = false;   // free up the availability of the slot for other patients once this slot is cancelled.
 
-                _healthcareDbContext.Appointment.Remove(appointment);
-                _healthcareDbContext.SaveChanges();
+                await this._adminService.CancelAppointmentAndFreeSlot(appointment);
 
                 TempData["Message"] = $"You canceled the {appointment.PatientName} appointment";
             }
