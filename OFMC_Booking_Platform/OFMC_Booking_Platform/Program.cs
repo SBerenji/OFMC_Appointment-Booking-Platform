@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Entities;
+using OFMC_Booking_Platform.Models;
 using OFMC_Booking_Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,62 +71,59 @@ app.MapControllerRoute(
 
 
 
-// Load environment variables from .env
-DotNetEnv.Env.Load();
-
 using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    // Ensure Admin role exists
-    var adminRole = "Admin";
-    if (!await roleManager.RoleExistsAsync(adminRole))
+    string[] roles = { "Admin", "Patient" };
+
+    foreach (var role in roles)
     {
-        await roleManager.CreateAsync(new IdentityRole(adminRole));
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
     }
 
-    // Seed Admin users from .env
-    var adminUsers = new List<(string? firstName, string? lastName, string? email, string? password, string? DOB)>
-    {
-        (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_1"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_1"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_1"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_1"), Environment.GetEnvironmentVariable("ADMIN_DOB_1")),
-        (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_2"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_2"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_2"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_2"), Environment.GetEnvironmentVariable("ADMIN_DOB_2")),
-        (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_3"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_3"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_3"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_3"), Environment.GetEnvironmentVariable("ADMIN_DOB_3")),
-        (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_4"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_4"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_4"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_4"), Environment.GetEnvironmentVariable("ADMIN_DOB_4")),
-    };
 
-    foreach (var (firstName, lastName, email, password, DOB) in adminUsers)
+    var config = builder.Configuration;
+    
+    var adminUsers = config.GetSection("AdminUsers").Get<List<AdminUserConfig>>();
+
+
+    foreach (var admin in adminUsers)
     {
-        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(admin.Email) || string.IsNullOrWhiteSpace(admin.Password))
             continue;
 
-        var existingUser = await userManager.FindByEmailAsync(email);
+        var existingUser = await userManager.FindByEmailAsync(admin.Email);
         if (existingUser == null)
         {
             var user = new User
             {
-                FirstName = firstName,
-                LastName = lastName,
-                UserName = email,
-                Email = email,
+                FirstName = admin.FirstName,
+                LastName = admin.LastName,
+                UserName = admin.Email,
+                Email = admin.Email,
                 EmailConfirmed = true,
-                DateOfBirth = string.IsNullOrWhiteSpace(DOB) ? DateTime.Today : DateTime.Parse(DOB).Date
+                DateOfBirth = string.IsNullOrWhiteSpace(admin.DOB) ? DateTime.Today : DateTime.Parse(admin.DOB).Date
             };
 
-            var result = await userManager.CreateAsync(user, password);
+            var result = await userManager.CreateAsync(user, admin.Password);
 
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, adminRole);
+                await userManager.AddToRoleAsync(user, "Admin");
 
-                Console.WriteLine($"Seeded admin user: {email}");
+                Console.WriteLine($"Seeded admin user: {admin.Email}");
             }
 
             else
             {
                 foreach (var error in result.Errors)
                 {
-                    Console.WriteLine($"Error creating user {email}: {error.Description}");
+                    Console.WriteLine($"Error creating user {admin.Email}: {error.Description}");
                 }
             }
         }
