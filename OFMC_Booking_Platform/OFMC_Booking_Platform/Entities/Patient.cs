@@ -6,8 +6,11 @@ namespace OFMC_Booking_Platform.Entities
 {
     public class Patient 
     {
+        public string UserId { get; set; }
+
         //PatientId is the primary key
         public int PatientId { get; set; } //can get and set the PatientId
+
 
         [Required(ErrorMessage = "Please enter a firstname")] // Error message if FirstName is not entered
         public string? FirstName { get; set; } //can get and set the FirstName
@@ -21,15 +24,6 @@ namespace OFMC_Booking_Platform.Entities
         [Required(ErrorMessage = "Please enter a email address")] // Error message if email is not entered
         [EmailAddress(ErrorMessage = "Please enter a valid email")] //Error message if invalid email format is entered
         public string? PatientEmail { get; set; } // can get and set the PatientEmail
-
-        [Required(ErrorMessage = "Please enter a password")] // Error message if Password
-        public string? Password { get; set; } //can get and set the Password
-
-
-
-        // to have access to all the appointments related to the patien
-        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-
 
     }
 }

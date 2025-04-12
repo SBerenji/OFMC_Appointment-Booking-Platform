@@ -1,5 +1,6 @@
-﻿@using OFMC_Booking_Platform.Entities
-@model List<Appointment>
+﻿﻿@using OFMC_Booking_Platform.Entities
+@model AppointmentsModel
+
 
 
 @{
@@ -22,7 +23,7 @@
             <!-- Left Column: Appointment Info -->
             <div class="col-md-9">
                 <h6 class="text-muted">Patient - Home</h6>
-                <p><strong>Welcome Back Sara!</strong></p>
+                <p><strong>Welcome Back @Model.Patient.FirstName @Model.Patient.LastName!</strong></p>
                 <p>Please view your upcoming appointments below</p>
 
                 <table class="table table-bordered text-center">
@@ -35,9 +36,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model != null && Model.Any())
+                        @if (Model.Appointments != null && Model.Appointments.Any())
                         {
-                            foreach (var appointment in Model)
+                            foreach (var appointment in Model.Appointments)
                             {
                                 <tr>
                                     <td>@appointment.AppointmentDate?.ToString("MMMM dd, yyyy  hh:mm tt")</td>
