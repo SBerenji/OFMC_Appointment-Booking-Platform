@@ -4,6 +4,7 @@ using OFMC_Booking_Platform.Services;
 
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using Twilio.TwiML.Messaging;
 using Twilio.Types;
 
 
@@ -42,11 +43,17 @@ namespace OFMC_Booking_Platform.Services
         {
             TwilioClient.Init(_accountSid, _authToken);
 
-
-            TwilioClient.Init(_accountSid, _authToken);
-
             var message = MessageResource.Create(
-                body: $"Hi {appointmentViewModel.ActiveAppointment.PatientName}, your appointment is scheduled for {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dd, MM, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}. - Oakridge Family Medical Center",
+                body: $"Hi {appointmentViewModel.ActiveAppointment.PatientName}, " +
+                    $"your appointment with {appointmentViewModel.ActiveAppointment.Doctor.DoctorName} " +
+                    $"({appointmentViewModel.ActiveDoctor.DoctorSpecialty}) is scheduled for " +
+                    $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("MMMM dd, yyyy")} at " +
+                    $"{appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}.\n\n" +
+                    $"Best regards, " +
+                    $"\nOakridge Family Medical Center. " +
+                    $"\nPhone: (555) 987-6543 | Email: info@oakridgemedical.com",
+
+
                 messagingServiceSid: _messagingServiceSid,
                 to: new PhoneNumber(appointmentViewModel.ActiveAppointment.AppointmentPhone.Replace("-", ""))
             );

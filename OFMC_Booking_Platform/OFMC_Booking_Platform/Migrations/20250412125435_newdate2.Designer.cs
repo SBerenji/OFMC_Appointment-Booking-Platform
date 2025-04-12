@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OFMC_Booking_Platform.Entities;
 
@@ -11,9 +12,11 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    partial class HealthcareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250412125435_newdate2")]
+    partial class newdate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,7 +199,23 @@ namespace OFMC_Booking_Platform.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("PatientId");
+
                     b.ToTable("Appointment");
+
+                    b.HasData(
+                        new
+                        {
+                            AppointmentId = 1,
+                            AppointmentDate = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentEmail = "sierraerb25@gmail.com",
+                            AppointmentPhone = "+15483335882",
+                            ContactMethod = 0,
+                            DoctorId = 1,
+                            Notes = "Headache",
+                            PatientId = 1,
+                            PatientName = "Sara Hanks"
+                        });
                 });
 
             modelBuilder.Entity("OFMC_Booking_Platform.Entities.Availability", b =>
@@ -434,17 +453,28 @@ namespace OFMC_Booking_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientEmail")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("PatientEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PatientId");
 
                     b.ToTable("Patient");
+
+                    b.HasData(
+                        new
+                        {
+                            PatientId = 1,
+                            DOB = new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Sierra",
+                            LastName = "Erb",
+                            Password = "password",
+                            PatientEmail = "sierraerb25@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("OFMC_Booking_Platform.Entities.User", b =>
@@ -582,10 +612,21 @@ namespace OFMC_Booking_Platform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OFMC_Booking_Platform.Entities.Patient", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("OFMC_Booking_Platform.Entities.Doctor", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("OFMC_Booking_Platform.Entities.Patient", b =>
                 {
                     b.Navigation("Appointments");
                 });
