@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Entities;
+using OFMC_Booking_Platform.Models;
 
 namespace OFMC_Booking_Platform.Controllers
 {
@@ -26,17 +28,53 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
-
-        [HttpGet("/getAppointments")]
-        public IActionResult GetDoctorAppointments()
+        // Defining a method that gets all the appointments associated with a doctor and returns to the viewmodel
+        [HttpGet]
+        public IActionResult GetDoctorAppointments(int doctorId)
         {
-            //will implement later
+            Doctor doctor = _healthcareDbContext.Doctor  // finding the doctor based on the doctor id passed to the action
+                .Include(d => d.Appointments)
+                .FirstOrDefault(d => d.DoctorId == doctorId);
 
-            return View("../Admin/");
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            DoctorAppointmentsViewModel viewModel = new DoctorAppointmentsViewModel  // initialized the view model with the required information
+            {
+                DoctorId = doctor.DoctorId,
+                DoctorName = doctor.DoctorName,
+                Appointments = doctor.Appointments
+                    .Where(a => a.AppointmentDate >= DateTime.Now)  // only get the upcoming appointments
+                    .OrderBy(a => a.AppointmentDate)
+                    .Select(a => new AppointmentInfoViewModel
+                    {
+                        PatientName = a.PatientName,
+                        AppointmentDate = a.AppointmentDate
+                    })
+                    .ToList()
+            };
+
+            return View("../Admin/DoctorAppointments", viewModel);
         }
 
 
 
+
+        //[HttpGet("/doctorAppointmentDetails")]
+        //public IActionResult GetDoctorAppointmentDetails()
+        //{
+        //    //to be implemented later
+        //}
+
+
+
+        //[HttpGet("/cancelAppointment")]
+        //public IActionResult CancelPatientAppointment()
+        //{
+        //    //to be implemented later
+        //}
 
     }
 }

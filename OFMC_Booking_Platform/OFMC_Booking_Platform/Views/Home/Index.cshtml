@@ -15,17 +15,20 @@
                 <h2>Welcome to the Oakridge Family Medical Center Booking Platform!</h2>
                 <p class="fs-5">Seamless doctor appointments at your fingertips—book, manage, and stay on top of your health with ease.</p>
 
-                <div class="d-flex flex-column align-items-center gap-2 mt-5">
-                    <button class="home-custom-btn green-btn">I am an admin</button>
-                    <button class="home-custom-btn patient-btn">I am a patient</button>
+                <div class="d-flex flex-column align-items-center gap-2 gap-2">
+                <a class="home-custom-btn green-btn" asp-controller="Account" asp-action="AdminLoginForm">I am an admin</a>
+
+                <a class="home-custom-btn blue-btn" asp-controller="Account" asp-action="PatientLoginForm">I am a patient</a>
 
 
-                    <p>View <a asp-controller="Healthcare" asp-action="GetAllDoctors">doctors</a></p>  @*  temporary link, will take out once log in is working *@
+
+                <!-- temporary for testing                  
+                <p>View <a asp-controller="Healthcare" asp-action="GetAllDoctors">doctors</a></p>  @*  temporary link, will take out once log in is working *@
 
 
                 <p>View <a asp-controller="Admin" asp-action="GetDoctorsList">DOCTOR'S LIST FOR THE ADMIN SIDE</a></p>  @*  temporary link, will take out once log in is working *@
-
-
+                
+                
                 </div>
 
             </div>

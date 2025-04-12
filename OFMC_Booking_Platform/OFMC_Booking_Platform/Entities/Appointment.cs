@@ -32,11 +32,12 @@ namespace OFMC_Booking_Platform.Entities
 
         //[Required(ErrorMessage = "Please enter a patient email")] // Error message if email is not entered
         //[EmailAddress(ErrorMessage = "Please enter a valid email")] //Error message if invalid email format is entered
+        [EmailAddress(ErrorMessage = "Please enter a valid email")] //Error message if invalid email format is entered
         public string? AppointmentEmail { get; set; } // can get and set the email of the patient
 
 
         //[Required(ErrorMessage = "Please enter a patient phone number")] // Error message if email is not entered
-        //[RegularExpression(@"^\+1\d{10}$", ErrorMessage = "Phone number must be in the format +1XXXXXXXXXX")]  // using regular expression to define the format of the phone number
+        [RegularExpression(@"^\+1\d{10}$", ErrorMessage = "Phone number must be in the format +1XXXXXXXXXX")]  // using regular expression to define the format of the phone number
         public string? AppointmentPhone { get; set; } // can get and set the phone number of the patient
 
 

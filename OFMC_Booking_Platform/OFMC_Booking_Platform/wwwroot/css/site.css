@@ -52,10 +52,38 @@ body {
     border: none;
 }
 
+.home-custom-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.action-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
 .green-btn {
     background-color: #156548;
 }
 
-.patient-btn {
+.blue-btn {
     background-color: #374E5F;
 }
+
+.cancel-btn {
+    background-color: #651D15;
+}
+

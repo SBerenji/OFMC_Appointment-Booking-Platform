@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OFMC_Booking_Platform.Entities;
 
@@ -11,9 +12,11 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    partial class HealthcareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250412121250_newdate")]
+    partial class newdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,126 +245,126 @@ namespace OFMC_Booking_Platform.Migrations
                             SlotId = 1,
                             DoctorId = 1,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 10, 28, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 2,
                             DoctorId = 1,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 11, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 3,
                             DoctorId = 1,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 12, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 4,
                             DoctorId = 2,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 10, 5, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 5,
                             DoctorId = 2,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 11, 11, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 6,
                             DoctorId = 2,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 12, 16, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 7,
                             DoctorId = 3,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 10, 20, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 8,
                             DoctorId = 3,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 11, 28, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 9,
                             DoctorId = 3,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 12, 22, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 10,
                             DoctorId = 4,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 10, 20, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 11,
                             DoctorId = 4,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 11, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 12,
                             DoctorId = 4,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 12, 19, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 13,
                             DoctorId = 5,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 10, 2, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 14,
                             DoctorId = 5,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 11, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 15,
                             DoctorId = 5,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 12, 14, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 16,
                             DoctorId = 6,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 10, 17, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 17,
                             DoctorId = 6,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 11, 25, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             SlotId = 18,
                             DoctorId = 6,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 12, 20, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -609,13 +612,15 @@ namespace OFMC_Booking_Platform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OFMC_Booking_Platform.Entities.Patient", null)
+                    b.HasOne("OFMC_Booking_Platform.Entities.Patient", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("OFMC_Booking_Platform.Entities.Doctor", b =>

@@ -367,5 +367,5 @@ FodyWeavers.xsd
 appsettings.Development.json
 /OFMC_Booking_Platform/OFMC_Booking_Platform/appsettings.Development.json
 
-.env/
+.env
 /OFMC_Booking_Platform/OFMC_Booking_Platform/env.txt

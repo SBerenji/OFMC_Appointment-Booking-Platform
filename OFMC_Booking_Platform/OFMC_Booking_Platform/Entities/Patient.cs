@@ -25,6 +25,12 @@ namespace OFMC_Booking_Platform.Entities
         [Required(ErrorMessage = "Please enter a password")] // Error message if Password
         public string? Password { get; set; } //can get and set the Password
 
+
+
+        // to have access to all the appointments related to the patien
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
+
     }
 }
 
