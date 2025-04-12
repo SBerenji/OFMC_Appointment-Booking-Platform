@@ -37,11 +37,11 @@
                         <td>@appointment.AppointmentDate?.ToString("MMMM dd, yyyy  hh:mm tt")</td>
 
                         <td>
-                            <a asp-controller="Admin" asp-action="GetAppointmentDetails" asp-route-id="@appointment.AppointmentId"
+                            <a asp-controller="Admin" asp-action="GetAppointmentDetails" asp-route-appointmentId="@appointment.AppointmentId"
                                class="action-btn green-btn">
                                 View Appointment Details
                             </a>
-                            <a asp-controller="Admin" asp-action="CancelPatientAppointment" asp-route-id="@Model.DoctorId"
+                            <a asp-controller="Admin" asp-action="GetCancelAppointmentForm" asp-route-appointmentId="@appointment.AppointmentId"
                                class="action-btn cancel-btn">
                                 Cancel
                             </a>

@@ -7,5 +7,9 @@ namespace OFMC_Booking_Platform.Services
     {
         void SendConfirmationSms(AppointmentViewModel appointment);
 
+        void SendAdminCancellationSms(AppointmentViewModel appointmentViewModel);
+
+        public void SendPatientCancellationSms(AppointmentViewModel appointmentViewModel);
+
     }
 }
