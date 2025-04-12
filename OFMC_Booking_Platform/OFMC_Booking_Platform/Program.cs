@@ -81,9 +81,6 @@ app.MapControllerRoute(
 
 
 
-//// Load environment variables from .env
-//DotNetEnv.Env.Load();
-
 using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
@@ -96,14 +93,6 @@ using (var scope = app.Services.CreateScope())
         await roleManager.CreateAsync(new IdentityRole(adminRole));
     }
 
-    //// Seed Admin users from .env
-    //var adminUsers = new List<(string? firstName, string? lastName, string? email, string? password, string? DOB)>
-    //{
-    //    (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_1"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_1"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_1"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_1"), Environment.GetEnvironmentVariable("ADMIN_DOB_1")),
-    //    (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_2"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_2"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_2"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_2"), Environment.GetEnvironmentVariable("ADMIN_DOB_2")),
-    //    (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_3"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_3"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_3"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_3"), Environment.GetEnvironmentVariable("ADMIN_DOB_3")),
-    //    (Environment.GetEnvironmentVariable("ADMIN_FIRSTNAME_4"), Environment.GetEnvironmentVariable("ADMIN_LASTNAME_4"), Environment.GetEnvironmentVariable("ADMIN_EMAIL_4"), Environment.GetEnvironmentVariable("ADMIN_PASSWORD_4"), Environment.GetEnvironmentVariable("ADMIN_DOB_4")),
-    //};
 
     var config = builder.Configuration;
     
