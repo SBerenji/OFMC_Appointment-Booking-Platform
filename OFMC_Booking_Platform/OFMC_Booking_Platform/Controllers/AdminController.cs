@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OFMC_Booking_Platform.Entities;
 using OFMC_Booking_Platform.Models;
@@ -24,7 +25,9 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
         // GET handler for the list of all of the doctors on the admin side
+        [Authorize(Roles = "Admin")
         [HttpGet("/doctorsList")] //specifies the URL - GET handler for the list of all of the doctors
+
         public IActionResult GetDoctorsList()
         {
             //retrieves a list of doctors from the database
@@ -35,6 +38,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         // Defining an action that gets all the appointments associated with a doctor and returns to the viewmodel
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetDoctorAppointments(int doctorId)
         {
@@ -69,6 +73,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         // defining an action that gets the information of the patient associated with an appointment 
+        [Authorize(Roles = "Admin")]
         [HttpGet("/doctorAppointmentDetails")]
         public IActionResult GetAppointmentDetails(int appointmentId)
         {
@@ -84,6 +89,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         // Defining an action that returns the patient appointment cancel form for admin
+        [Authorize(Roles = "Admin")]
         [HttpGet("/admin/cancelAppointmentForm")]
         public IActionResult GetCancelAppointmentForm(int appointmentId)
         {
@@ -112,6 +118,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         // Defining an action that removes the appointment of the patient from the database
+        [Authorize(Roles = "Admin")]
         [HttpPost("/admin/cancelAppointment")]
         public IActionResult CancelPatientAppointment(int appointmentId)
         {
@@ -150,24 +157,6 @@ namespace OFMC_Booking_Platform.Controllers
                         _smsService.SendAdminCancellationSms(appointmentViewModel);
                         break;
                 }
-
-
-
-
-                //// Send a cancellation email if the preferred contact method is set to 'Email' by the patient when booking the appointment
-                //if (appointment.ContactMethod == ContactMethod.Email)
-                //{
-
-                //    _emailService.SendAdminCancellationEmail(appointmentViewModel);
-                //}
-
-
-                //// Send a cancellation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
-                //if (appointment.ContactMethod == ContactMethod.Text || appointment.ContactMethod == ContactMethod.Phone)
-                //{
-                //    _smsService.SendAdminCancellationSms(appointmentViewModel);
-                //}
-
 
 
 
