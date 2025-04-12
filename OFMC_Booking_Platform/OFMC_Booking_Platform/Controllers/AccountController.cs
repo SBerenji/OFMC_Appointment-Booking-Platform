@@ -78,6 +78,7 @@ namespace OFMC_Booking_Platform.Controllers
             {
                 User newUser = new User();
 
+                newUser.UserName = RegistrationInfo.Email;
                 newUser.FirstName = RegistrationInfo.FirstName;
                 newUser.LastName = RegistrationInfo.LastName;
                 newUser.DateOfBirth = RegistrationInfo.DateOfBirth;

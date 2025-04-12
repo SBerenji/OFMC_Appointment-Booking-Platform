@@ -1,0 +1,43 @@
+﻿@using OFMC_Booking_Platform.Entities
+@model List<Appointment>
+
+@{
+    ViewData["Title"] = "Appointment History";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Appointment History</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You have no past appointments to display.</div>
+    }
+    else
+    {
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Doctor</th>
+                    <th>Specialty</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model)
+                {
+                    <tr>
+                        <td>@appointment.AppointmentDate?.ToString("f")</td>
+                        <td>@appointment.Doctor?.DoctorName</td>
+                        <td>@appointment.Doctor?.DoctorSpecialty</td>
+                        <td>@appointment.Notes</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-outline-secondary">Back to Appointments</a>
+    </div>
+</div>

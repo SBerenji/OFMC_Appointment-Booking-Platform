@@ -21,9 +21,8 @@ namespace OFMC_Booking_Platform.Models
         public DateTime? DateOfBirth { get; set; }        // The Date and time of the event and is required.
 
 
-        [RegularExpression(@"^\+1\d{10}$", ErrorMessage = "Phone number must be in the format +1XXXXXXXXXX")]  // using regular expression to define the format of the phone number
+        [RegularExpression("[0-9]{3}-[0-9]{3}-[0-9]{4}", ErrorMessage = "Please follow the format 000-000-0000")]
 
-        //[RegularExpression("[0-9] {3} - [0-9] {3} - [0-9] {4}", ErrorMessage = "Please follow the format 000-000-0000!")]
         [Display(Name = "Phone Number")]
         public string? PhoneNumber { get; set; }
 
