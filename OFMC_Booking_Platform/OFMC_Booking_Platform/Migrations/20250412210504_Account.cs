@@ -91,11 +91,11 @@ namespace OFMC_Booking_Platform.Migrations
                 {
                     PatientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PatientEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PatientEmail = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -239,24 +239,24 @@ namespace OFMC_Booking_Platform.Migrations
                 columns: new[] { "SlotId", "DoctorId", "IsBooked", "SlotDateTime" },
                 values: new object[,]
                 {
-                    { 1, 1, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, 1, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, 1, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, 2, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, 2, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 6, 2, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 7, 3, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 8, 3, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 9, 3, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 10, 4, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 11, 4, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 12, 4, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 13, 5, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 14, 5, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 15, 5, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 16, 6, false, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 17, 6, false, new DateTime(2023, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 18, 6, false, new DateTime(2024, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, 1, false, new DateTime(2025, 10, 28, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, false, new DateTime(2025, 11, 15, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 1, false, new DateTime(2025, 12, 12, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, 2, false, new DateTime(2025, 10, 5, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, 2, false, new DateTime(2025, 11, 11, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, 2, false, new DateTime(2025, 12, 16, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, 3, false, new DateTime(2025, 10, 20, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 8, 3, false, new DateTime(2025, 11, 28, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 9, 3, false, new DateTime(2025, 12, 22, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10, 4, false, new DateTime(2025, 10, 20, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 11, 4, false, new DateTime(2025, 11, 15, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 12, 4, false, new DateTime(2025, 12, 19, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 13, 5, false, new DateTime(2025, 10, 2, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 14, 5, false, new DateTime(2025, 11, 15, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 15, 5, false, new DateTime(2025, 12, 14, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 16, 6, false, new DateTime(2025, 10, 17, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 17, 6, false, new DateTime(2025, 11, 25, 12, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 18, 6, false, new DateTime(2025, 12, 20, 12, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -271,16 +271,6 @@ namespace OFMC_Booking_Platform.Migrations
                     { 5, 105, "Dr. Olivia Martinez", "Dermatology" },
                     { 6, 101, "Dr. Ryan Patel", "Family Physician" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Patient",
-                columns: new[] { "PatientId", "DOB", "FirstName", "LastName", "Password", "PatientEmail" },
-                values: new object[] { 1, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified), "Sierra", "Erb", "password", "sierraerb25@gmail.com" });
-
-            migrationBuilder.InsertData(
-                table: "Appointment",
-                columns: new[] { "AppointmentId", "AppointmentDate", "AppointmentEmail", "AppointmentPhone", "ContactMethod", "DoctorId", "Notes", "PatientId", "PatientName" },
-                values: new object[] { 1, new DateTime(2022, 12, 31, 12, 0, 0, 0, DateTimeKind.Unspecified), "sierraerb25@gmail.com", "+15483335882", 0, 1, "Headache", 1, "Sara Hanks" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointment_DoctorId",
