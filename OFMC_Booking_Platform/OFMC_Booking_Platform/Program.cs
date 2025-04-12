@@ -86,11 +86,14 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    // Ensure Admin role exists
-    var adminRole = "Admin";
-    if (!await roleManager.RoleExistsAsync(adminRole))
+    string[] roles = { "Admin", "Patient" };
+
+    foreach (var role in roles)
     {
-        await roleManager.CreateAsync(new IdentityRole(adminRole));
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
     }
 
 
@@ -121,7 +124,7 @@ using (var scope = app.Services.CreateScope())
 
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, adminRole);
+                await userManager.AddToRoleAsync(user, "Admin");
 
                 Console.WriteLine($"Seeded admin user: {admin.Email}");
             }
