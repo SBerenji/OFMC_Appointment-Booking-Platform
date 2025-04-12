@@ -53,7 +53,7 @@
 
 				<div class="mb-3">
 					<label asp-for="PhoneNumber" class="form-label"></label>
-					<input asp-for="PhoneNumber" class="form-control thick-border" placeholder="000-000-0000" />
+					<input asp-for="PhoneNumber" id="PhoneNumber" class="form-control thick-border" placeholder="000-000-0000" />
 					<span asp-validation-for="PhoneNumber" class="text-danger"></span>
 				</div>
 
@@ -82,3 +82,16 @@
 		</div>
 	</div>
 </div>
+
+
+@section Scripts {
+	<!-- Use the proper UMD version that defines `Inputmask` globally -->
+	<script src="https://unpkg.com/inputmask@5.0.8/dist/inputmask.min.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// This will now work because Inputmask is properly loaded
+			Inputmask("999-999-9999").mask(document.getElementById("PhoneNumber"));
+		});
+	</script>
+}
