@@ -22,7 +22,7 @@ namespace OFMC_Booking_Platform.Models
 
 
 
-        [RegularExpression("[0-9]{3}-[0-9]{3}-[0-9]{4}", ErrorMessage = "Please follow the format 000-000-0000!")]
+        [RegularExpression(@"\+1[0-9]{3}-[0-9]{3}-[0-9]{4}", ErrorMessage = "Please follow the format 000-000-0000")]
         [Display(Name = "Phone Number")]
         public string? PhoneNumber { get; set; }
 

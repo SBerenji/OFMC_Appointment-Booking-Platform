@@ -48,7 +48,7 @@ namespace OFMC_Booking_Platform.Services
             var message = MessageResource.Create(
                 body: $"Hi {appointmentViewModel.ActiveAppointment.PatientName}, your appointment is scheduled for {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("dd, MM, yyyy")} at {appointmentViewModel.ActiveAppointment.AppointmentDate?.ToString("hh:mm tt")}. - Oakridge Family Medical Center",
                 messagingServiceSid: _messagingServiceSid,
-                to: new PhoneNumber(appointmentViewModel.ActiveAppointment.AppointmentPhone)
+                to: new PhoneNumber(appointmentViewModel.ActiveAppointment.AppointmentPhone.Replace("-", ""))
             );
 
 
