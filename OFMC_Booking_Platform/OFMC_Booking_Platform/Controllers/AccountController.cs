@@ -32,6 +32,7 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
+        [HttpGet("/Patient/Register")]
         public IActionResult Register()
         {
             return View();
