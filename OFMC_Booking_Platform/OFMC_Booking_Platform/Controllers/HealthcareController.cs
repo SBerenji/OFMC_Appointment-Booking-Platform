@@ -11,21 +11,19 @@ namespace OFMC_Booking_Platform.Controllers
     public class HealthcareController : Controller //controller for the healthcare information 
     {
         // constructor - tells the DI container that this controller needs a DB context 
-        public HealthcareController(HealthcareDbContext healthcareDbContext, IEmailService emailService, ISmsService smsService)
+        public HealthcareController(IPatientService patientService, IEmailService emailService, ISmsService smsService)
         {
-            _healthcareDbContext = healthcareDbContext; //intitalizes the controller with a reference to the HealthcareDbContext
+            this._patientService = patientService; // Injecting the Patient Service for DB operations.
             _emailService = emailService; // injecting the email service
             _smsService = smsService;   // injecting the sms service
         }
 
         // GET handler for the list of all of the doctors
         [HttpGet("/doctors")] //specifies the URL - GET handler for the list of all of the doctors
-        public IActionResult GetAllDoctors()
+        public async Task<IActionResult> GetAllDoctors()
         {
-            //retrieves a list of doctors from the database
-            List<Doctor> doctors = _healthcareDbContext.Doctor.ToList();
-
-            return View("../Patient/Manage", doctors);  //returns the list of doctors to the view using the view name
+            //retrieves a list of doctors from the database using PatientService interface.
+            return View("../Patient/Manage", await this._patientService.GetAllDoctors());  //returns the list of doctors to the view using the view name
         }
 
 
@@ -42,8 +40,7 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized(); 
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
@@ -52,10 +49,7 @@ namespace OFMC_Booking_Platform.Controllers
 
             //retrieves a list of appointments from the database
 
-            List<Appointment> appointments = _healthcareDbContext.Appointment
-                .Include(m => m.Doctor) // Include the related Doctor data
-                .Where(m => m.PatientId == patient.PatientId)
-                .ToList();
+            List<Appointment> appointments = await this._patientService.GetListOfAppointmentsAndIncludeDoctorsBasedOnPatientId(patient.PatientId);
 
             AppointmentsModel appointmentsmodel = new AppointmentsModel()
             {
@@ -76,21 +70,14 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized();
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
                 return NotFound("Patient not found");
             }
 
-            var history = _healthcareDbContext.Appointment
-                .Include(a => a.Doctor)
-                .Where(a => a.AppointmentDate < DateTime.Now && a.PatientId == patient.PatientId) // mock for Sara
-                .OrderByDescending(a => a.AppointmentDate)
-                .ToList();
-
-            return View("../Patient/AppointmentHistory", history);
+            return View("../Patient/AppointmentHistory", await this._patientService.GetListOfPastAppointmentsAndIncludeDoctorsBasedOnCurrentTimeAndPatientId(patient.PatientId));
         }
 
 
@@ -106,8 +93,7 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized(); 
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
@@ -119,12 +105,10 @@ namespace OFMC_Booking_Platform.Controllers
 
 
             // tries to find doctor with the id from the database
-            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == id).FirstOrDefault();
+            Doctor? doctor = await this._patientService.GetDoctorById(id);
 
             //makes a list of available slots for that doctor
-            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == id).Where(a => !a.IsBooked)
-                .OrderBy(a => a.SlotDateTime)
-                .ToList();
+            List<Availability>? availableSlots = await this._patientService.GetAllAvailableAppointmentSlotsForADoctorBasedOnDoctorId(id);
 
             // populates the appointmentViewModel with the existing doctor info 
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
@@ -154,8 +138,7 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized(); 
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
@@ -168,13 +151,11 @@ namespace OFMC_Booking_Platform.Controllers
 
 
             // tries to find appointment and doctor with the id from the database
-            Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == id).FirstOrDefault();
-            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+            Appointment? appointment = await this._patientService.GetAppointmentById(id);
+            Doctor? doctor = await this._patientService.GetDoctorById(appointment.DoctorId);
 
             //gets list of available slots for that doctor
-            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
-                .OrderBy(a => a.SlotDateTime)
-                .ToList();
+            List<Availability>? availableSlots = await this._patientService.GetAllAvailableAppointmentSlotsForADoctorBasedOnDoctorId(doctor.DoctorId);
 
             // populates the appointmentViewModel with the existing appointment info and doctor
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
@@ -203,18 +184,19 @@ namespace OFMC_Booking_Platform.Controllers
             if (ModelState.IsValid) //enter this if model state is valid 
             {
                 //Get the selected slot from the database
-                Availability? selectedSlot = _healthcareDbContext.Availability.Where(a => a.SlotDateTime == appointmentViewModel.ActiveAppointment.AppointmentDate).Where(a => a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
+                Availability? selectedSlot = await this._patientService.GetTheSelectedSlotBasedOnAppointmentDateAndDoctorId(appointmentViewModel.ActiveAppointment.AppointmentDate, appointmentViewModel.ActiveDoctor.DoctorId);
 
                 selectedSlot.IsBooked = true; // Mark the slot as booked
 
-                _healthcareDbContext.Appointment.Add(appointmentViewModel.ActiveAppointment);   // add the appointment information in the database 
-
-                _healthcareDbContext.SaveChanges(); // saves the changes to the database
+                // add the appointment information in the database 
+                // saves the changes to the database
+                await this._patientService.AddAnAppointmentAndBookSlot(appointmentViewModel.ActiveAppointment);
 
 
                 // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
-                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
-                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+                appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
+                //appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
+                //    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
 
 
 
@@ -249,8 +231,7 @@ namespace OFMC_Booking_Platform.Controllers
                     return Unauthorized(); 
                 }
 
-                var patient = await _healthcareDbContext.Patient
-                    .FirstOrDefaultAsync(p => p.UserId == userId);
+                Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
                 if (patient == null)
                 {
@@ -262,12 +243,10 @@ namespace OFMC_Booking_Platform.Controllers
 
 
                 // tries to find doctor with the id from the database
-                Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
+                Doctor? doctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveDoctor.DoctorId);
 
                 //makes a list of available slots for that doctor
-                List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId).Where(a => !a.IsBooked)
-                    .OrderBy(a => a.SlotDateTime)
-                    .ToList();
+                List<Availability>? availableSlots = await this._patientService.GetAllAvailableAppointmentSlotsForADoctorBasedOnDoctorId(appointmentViewModel.ActiveDoctor.DoctorId);
 
                 // populates the appointmentViewModel with the existing doctor info 
                 AppointmentViewModel appointmentViewModelNew = new AppointmentViewModel()
@@ -295,7 +274,7 @@ namespace OFMC_Booking_Platform.Controllers
         public async Task<IActionResult> RescheduleAppointment(AppointmentViewModel appointmentViewModel)
         {
             //Load the existing appointment from the database based on the id
-            Appointment? existingAppointment = _healthcareDbContext.Appointment.Where(a => a.AppointmentId == appointmentViewModel.ActiveAppointment.AppointmentId).FirstOrDefault();
+            Appointment? existingAppointment = await this._patientService.GetAppointmentById(appointmentViewModel.ActiveAppointment.AppointmentId);
 
             //set the doctor id and patient id
             appointmentViewModel.ActiveAppointment.DoctorId = appointmentViewModel.ActiveDoctor.DoctorId;
@@ -305,17 +284,13 @@ namespace OFMC_Booking_Platform.Controllers
             if (ModelState.IsValid) //enter this if model state is valid 
             {
                 //Load the previously selected slot from the database
-                Availability? previousSlot = _healthcareDbContext.Availability
-                    .FirstOrDefault(a => a.SlotDateTime == existingAppointment.AppointmentDate
-                    && a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId);
+                Availability? previousSlot = await this._patientService.GetTheSelectedSlotBasedOnAppointmentDateAndDoctorId(existingAppointment.AppointmentDate, appointmentViewModel.ActiveDoctor.DoctorId);
 
 
                 previousSlot.IsBooked = false; // Mark the slot as not booked - free it up
 
                 //Load the currently selected slot from the database
-                Availability? selectedSlot = _healthcareDbContext.Availability
-                    .FirstOrDefault(a => a.SlotDateTime == appointmentViewModel.ActiveAppointment.AppointmentDate
-                    && a.DoctorId == appointmentViewModel.ActiveDoctor.DoctorId);
+                Availability? selectedSlot = await this._patientService.GetTheSelectedSlotBasedOnAppointmentDateAndDoctorId(appointmentViewModel.ActiveAppointment.AppointmentDate, appointmentViewModel.ActiveDoctor.DoctorId);
 
 
                 selectedSlot.IsBooked = true; // Mark the slot as booked
@@ -323,12 +298,11 @@ namespace OFMC_Booking_Platform.Controllers
                 //change the existing appointment date to the newly selected date
                 existingAppointment.AppointmentDate = selectedSlot.SlotDateTime;
 
-                _healthcareDbContext.SaveChanges(); // saves the changes to the database
+                await this._patientService.SaveChangesInDB(); // saves the changes to the database
 
 
                 // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
-                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
-                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+                appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
 
 
                 // sending email and SMS notification based on contact method
@@ -360,8 +334,7 @@ namespace OFMC_Booking_Platform.Controllers
                     return Unauthorized();
                 }
 
-                var patient = await _healthcareDbContext.Patient
-                    .FirstOrDefaultAsync(p => p.UserId == userId);
+                Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
                 if (patient == null)
                 {
@@ -374,13 +347,11 @@ namespace OFMC_Booking_Platform.Controllers
 
 
                 // tries to find appointment and doctor with the id from the database
-                Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == appointmentViewModel.ActiveDoctor.DoctorId).FirstOrDefault();
-                Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+                Appointment? appointment = await this._patientService.GetAppointmentById(appointmentViewModel.ActiveAppointment.AppointmentId);
+                Doctor? doctor = await this._patientService.GetDoctorById(appointment.DoctorId);
 
                 //gets list of available slots for that doctor
-                List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
-                    .OrderBy(a => a.SlotDateTime)
-                    .ToList();
+                List<Availability>? availableSlots = await this._patientService.GetAllAvailableAppointmentSlotsForADoctorBasedOnDoctorId(doctor.DoctorId);
 
                 // populates the appointmentViewModel with the existing appointment info and doctor
                 AppointmentViewModel appointmentViewModelNew = new AppointmentViewModel()
@@ -412,17 +383,15 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized(); 
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
                 return NotFound("Patient not found");
             }
 
-            var appointment = _healthcareDbContext.Appointment
-                .Include(a => a.Doctor)
-                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == patient.PatientId); // Just temporary since we dont have login ready yet
+            
+            Appointment? appointment = await this._patientService.GetAnAppointmentAndIncludeDoctorBasedOnAppointmentIdAndPatientId(id, patient.PatientId); // Just temporary since we don't have login ready yet
 
             if (appointment == null)
                 return NotFound();
@@ -433,16 +402,14 @@ namespace OFMC_Booking_Platform.Controllers
 
         [Authorize(Roles = "Patient")]
         [HttpGet("/appointment/cancel-form")] //specifies the URL - GET handler for the blank reschedule form
-        public IActionResult GetCanceltForm(int id)
+        public async Task<IActionResult> GetCancelForm(int id)
         {
             // tries to find appointment and doctor with the id from the database
-            Appointment? appointment = _healthcareDbContext.Appointment.Where(p => p.AppointmentId == id).FirstOrDefault();
-            Doctor? doctor = _healthcareDbContext.Doctor.Where(p => p.DoctorId == appointment.DoctorId).FirstOrDefault();
+            Appointment? appointment = await this._patientService.GetAppointmentById(id);
+            Doctor? doctor = await this._patientService.GetDoctorById(appointment.DoctorId);
 
             //gets list of available slots for that doctor
-            List<Availability>? availableSlots = _healthcareDbContext.Availability.Where(a => a.DoctorId == doctor.DoctorId).Where(a => !a.IsBooked)
-                .OrderBy(a => a.SlotDateTime)
-                .ToList();
+            List<Availability>? availableSlots = await this._patientService.GetAllAvailableAppointmentSlotsForADoctorBasedOnDoctorId(doctor.DoctorId);
 
             // populates the appointmentViewModel with the existing appointment info and doctor
             AppointmentViewModel appointmentViewModel = new AppointmentViewModel()
@@ -472,17 +439,15 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized();
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
                 return NotFound("Patient not found");
             }
 
-
-            var appointment = _healthcareDbContext.Appointment
-                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == patient.PatientId);
+            
+            Appointment? appointment = await this._patientService.GetAnAppointmentBasedOnAppointmentIdAndPatientId(id, patient.PatientId);
 
             if (appointment != null)
             {
@@ -496,8 +461,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
                 // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
-                appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
-                    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
+                appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
 
 
 
@@ -517,15 +481,14 @@ namespace OFMC_Booking_Platform.Controllers
                         break;
                 }
 
-
-                var slot = _healthcareDbContext.Availability
-                    .FirstOrDefault(s => s.SlotDateTime == appointment.AppointmentDate && s.DoctorId == appointment.DoctorId);
+            
+                Availability? slot = await this._patientService.GetTheSelectedSlotBasedOnAppointmentDateAndDoctorId(appointment.AppointmentDate, appointment.DoctorId);
 
                 if (slot != null)
                     slot.IsBooked = false;
 
-                _healthcareDbContext.Appointment.Remove(appointment);
-                _healthcareDbContext.SaveChanges();
+                await this._patientService.CancelAppointmentAndFreeSlot(appointment);
+
                 TempData["Message"] = "Your appointment has been cancelled.";
             }
 
@@ -546,17 +509,15 @@ namespace OFMC_Booking_Platform.Controllers
                 return Unauthorized(); 
             }
 
-            var patient = await _healthcareDbContext.Patient
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            Patient? patient = await this._patientService.GetPatientByClaimsUserId(userId);
 
             if (patient == null)
             {
                 return NotFound("Patient not found");
             }
 
-            var appointment = _healthcareDbContext.Appointment
-                .Include(a => a.Doctor)
-                .FirstOrDefault(a => a.AppointmentId == id && a.PatientId == patient.PatientId);
+            
+            Appointment? appointment = await this._patientService.GetAnAppointmentAndIncludeDoctorBasedOnAppointmentIdAndPatientId(id, patient.PatientId);
 
             if (appointment == null)
                 return NotFound();
@@ -565,7 +526,7 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
-        private HealthcareDbContext _healthcareDbContext; //private HealthcareDbContext variable
+        private readonly IPatientService _patientService; //private HealthcareDbContext variable
         private readonly IEmailService _emailService;  
         private readonly ISmsService _smsService;
 
