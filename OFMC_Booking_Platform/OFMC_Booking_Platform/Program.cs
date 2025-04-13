@@ -38,6 +38,9 @@ builder.Services.AddDefaultIdentity<User>(
 // registering the Admin Service.
 builder.Services.AddScoped<IAdminService, AdminService>();
 
+// registering the Patient Service.
+builder.Services.AddScoped<IPatientService, PatientService>();
+
 // registering the email service
 builder.Services.AddScoped<IEmailService, EmailService>();
 
