@@ -41,6 +41,9 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 // registering the Patient Service.
 builder.Services.AddScoped<IPatientService, PatientService>();
 
+// registering the Account Service.
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 // registering the email service
 builder.Services.AddScoped<IEmailService, EmailService>();
 
