@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OFMC_Booking_Platform.Entities;
 using OFMC_Booking_Platform.Models;
+using OFMC_Booking_Platform.Services;
 
 namespace OFMC_Booking_Platform.Controllers
 {
@@ -14,15 +15,15 @@ namespace OFMC_Booking_Platform.Controllers
         // UserManager instance is injected for registration.
         private readonly UserManager<User> _userManager;
 
-        private readonly HealthcareDbContext _healthcareDbContext;
+        private readonly IAccountService _accountService;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, HealthcareDbContext healthcareDbContext)
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IAccountService accountService)
         {
             this._signInManager = signInManager;
 
             this._userManager = userManager;
 
-            this._healthcareDbContext = healthcareDbContext;
+            this._accountService = accountService;
         }
 
         public IActionResult Index()
@@ -108,9 +109,7 @@ namespace OFMC_Booking_Platform.Controllers
                         DOB = newUser.DateOfBirth
                     };
 
-                    _healthcareDbContext.Patient.Add(newPatient);
-                    await _healthcareDbContext.SaveChangesAsync();
-
+                    await this._accountService.AddPatientToDB(newPatient);
 
 
                     await this._signInManager.SignInAsync(newUser, true);
