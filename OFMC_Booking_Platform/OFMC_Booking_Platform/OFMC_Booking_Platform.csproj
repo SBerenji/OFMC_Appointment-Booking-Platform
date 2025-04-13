@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="TestScripts\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Emails\" />
   </ItemGroup>

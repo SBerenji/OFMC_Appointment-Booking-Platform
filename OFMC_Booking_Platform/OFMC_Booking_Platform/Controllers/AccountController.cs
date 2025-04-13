@@ -131,6 +131,7 @@ namespace OFMC_Booking_Platform.Controllers
         }
 
 
+        [HttpGet("/Login/Admin/Form")]
         public IActionResult AdminLoginForm()
         {
             return View("AdminLogin");

@@ -67,6 +67,8 @@ namespace OFMC_Booking_Platform.Services
         public async Task<Appointment?> GetAppointmentById(int appointmentId)
         {
             Appointment? appointment = await this._healthcareDbContext.Appointment
+             .Include(a => a.Doctor)
+            .Include(a => a.Patient)
             .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId); // find the specific appointment of the patient
 
             if (appointment == null)

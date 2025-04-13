@@ -18,6 +18,8 @@ namespace OFMC_Booking_Platform.Controllers
             _smsService = smsService;   // injecting the sms service
         }
 
+
+        [Authorize(Roles = "Patient")]
         // GET handler for the list of all of the doctors
         [HttpGet("/doctors")] //specifies the URL - GET handler for the list of all of the doctors
         public async Task<IActionResult> GetAllDoctors()
