@@ -26,7 +26,7 @@
 
                 <div class="mb-3">
                     <label asp-for="ActiveAppointment.PatientName" class="form-label">Patient Name <span class="text-danger">*</span></label>
-                    <input type="text" asp-for="ActiveAppointment.PatientName" class="form-control" readonly />
+                    <input type="text" asp-for="ActiveAppointment.PatientName" class="form-control"  />
                 </div>
 
                 <!-- Time Slot Dropdown -->
@@ -78,7 +78,7 @@
 
                 <div class="d-flex gap-3 mt-4">
                     <button type="submit" class="btn btn-success px-4">Save</button>
-                    <a asp-controller="Healthcare" asp-action="GetAllDoctors" class="btn btn-secondary px-4">Cancel</a>
+                    <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-secondary px-4">Cancel</a>
                 </div>
             </div>
 

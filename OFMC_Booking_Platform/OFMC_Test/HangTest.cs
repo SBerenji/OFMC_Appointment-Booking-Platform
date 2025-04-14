@@ -99,6 +99,7 @@ namespace OFMC_Test
         {
             // Clean up browser after test
             driver.Quit();
+            driver.Dispose();   
         }
     }
 }
