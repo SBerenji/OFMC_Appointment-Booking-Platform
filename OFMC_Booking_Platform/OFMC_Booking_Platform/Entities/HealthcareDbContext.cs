@@ -19,7 +19,7 @@ namespace OFMC_Booking_Platform.Entities
         {
             base.OnModelCreating(modelBuilder);
 
-            // Seeds data into the Party table 
+            // Seeds data into the Doctor table 
             modelBuilder.Entity<Doctor>().HasData(
                 new Doctor() { DoctorId = 1, DoctorName = "Dr. Emily Carter", DoctorSpecialty = "Family Physician", DoctorExt = 106 },
                 new Doctor() { DoctorId = 2, DoctorName = "Dr. Shawn Kieze", DoctorSpecialty = "Pediatrics", DoctorExt = 103 },
@@ -30,7 +30,7 @@ namespace OFMC_Booking_Platform.Entities
                 );
 
 
-            // Seeds data into the Party table 
+            // Seeds data into the Availability table 
             modelBuilder.Entity<Availability>().HasData(
                 new Availability() { SlotId = 1, DoctorId = 1, SlotDateTime = new DateTime(2025, 10, 28, 12, 0, 0), IsBooked = false },
                 new Availability() { SlotId = 2, DoctorId = 1, SlotDateTime = new DateTime(2025, 11, 15, 12, 0, 0), IsBooked = false },
@@ -49,7 +49,16 @@ namespace OFMC_Booking_Platform.Entities
                 new Availability() { SlotId = 15, DoctorId = 5, SlotDateTime = new DateTime(2025, 12, 14, 12, 0, 0), IsBooked = false },
                 new Availability() { SlotId = 16, DoctorId = 6, SlotDateTime = new DateTime(2025, 10, 17, 12, 0, 0), IsBooked = false },
                 new Availability() { SlotId = 17, DoctorId = 6, SlotDateTime = new DateTime(2025, 11, 25, 12, 0, 0), IsBooked = false },
-                new Availability() { SlotId = 18, DoctorId = 6, SlotDateTime = new DateTime(2025, 12, 20, 12, 0, 0), IsBooked = false }
+                new Availability() { SlotId = 18, DoctorId = 6, SlotDateTime = new DateTime(2025, 12, 20, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 19, DoctorId = 1, SlotDateTime = new DateTime(2025, 01, 28, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 20, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 21, DoctorId = 1, SlotDateTime = new DateTime(2025, 9, 12, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 22, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 1, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 23, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 12, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 24, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 13, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 25, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 24, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 26, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 27, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 16, 12, 0, 0), IsBooked = false }
                 );
 
         }
