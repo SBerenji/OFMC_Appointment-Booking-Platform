@@ -35,6 +35,21 @@ builder.Services.AddDefaultIdentity<User>(
 .AddEntityFrameworkStores<HealthcareDbContext>();
 
 
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.LoginPath = "/Home/Index";
+    options.AccessDeniedPath = "/Home/Index";
+
+    // Here we control how long the cookie lives if RememberMe is true.
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+
+    options.SlidingExpiration = true;
+});
+
+
+
 // registering the Admin Service.
 builder.Services.AddScoped<IAdminService, AdminService>();
 

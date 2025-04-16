@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OFMC_Booking_Platform.Entities;
 using OFMC_Booking_Platform.Models;
 
 namespace OFMC_Booking_Platform.Controllers
@@ -8,13 +10,35 @@ namespace OFMC_Booking_Platform.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly UserManager<User> _userManager;
+
+        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager)
         {
             _logger = logger;
+
+            this._userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if ((User.Identity != null) && (User.Identity.IsAuthenticated))
+            {
+                var user = await this._userManager.GetUserAsync(User);
+
+                if (user != null)
+                {
+                    if (await this._userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return RedirectToAction("GetDoctorsList", "Admin");
+                    }
+
+                    else if (await this._userManager.IsInRoleAsync(user, "Patient"))
+                    {
+                        return RedirectToAction("GetAllAppointments", "Healthcare");
+                    };
+                };
+            };
+
             return View();
         }
 
