@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OFMC_Booking_Platform.Entities;
 
@@ -11,9 +12,11 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    partial class HealthcareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413193644_final")]
+    partial class final
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -348,69 +351,6 @@ namespace OFMC_Booking_Platform.Migrations
                             DoctorId = 6,
                             IsBooked = false,
                             SlotDateTime = new DateTime(2025, 12, 20, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 19,
-                            DoctorId = 2,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 1, 28, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 20,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 21,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 9, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 22,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 11, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 23,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 24,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 13, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 25,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 24, 12, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 26,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 15, 14, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SlotId = 27,
-                            DoctorId = 1,
-                            IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -501,9 +441,6 @@ namespace OFMC_Booking_Platform.Migrations
 
                     b.Property<string>("PatientEmail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PatientPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

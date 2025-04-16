@@ -18,6 +18,8 @@ namespace OFMC_Booking_Platform.Controllers
             _smsService = smsService;   // injecting the sms service
         }
 
+
+        [Authorize(Roles = "Patient")]
         // GET handler for the list of all of the doctors
         [HttpGet("/doctors")] //specifies the URL - GET handler for the list of all of the doctors
         public async Task<IActionResult> GetAllDoctors()
@@ -119,7 +121,8 @@ namespace OFMC_Booking_Platform.Controllers
                 ActiveAppointment = new Appointment()
                 {
                     PatientName = patientName,
-                    AppointmentEmail = patient?.PatientEmail
+                    AppointmentEmail = patient?.PatientEmail,
+                    AppointmentPhone = patient?.PatientPhone
                 }
             };
 
@@ -209,9 +212,8 @@ namespace OFMC_Booking_Platform.Controllers
                         _emailService.SendConfirmatioEmail(appointmentViewModel);
                         break;
 
-                    // Send a confirmation SMS message if the preferred contact method is set to 'Text' or 'Phone number' by the patient when booking the appointment
+                    // Send a confirmation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
                     case ContactMethod.Text:
-                    case ContactMethod.Phone:
                         _smsService.SendConfirmationSms(appointmentViewModel);
                         break;
                 }
@@ -316,7 +318,6 @@ namespace OFMC_Booking_Platform.Controllers
 
                     // Send a confirmation SMS message for rescheduling  if the preferred contact method is set to 'Text' by the patient when booking the appointment
                     case ContactMethod.Text:
-                    case ContactMethod.Phone:
                         _smsService.SendPatientRescheduleConfirmationSMS(appointmentViewModel);
                         break;
                 }
@@ -475,9 +476,8 @@ namespace OFMC_Booking_Platform.Controllers
                         _emailService.SendPatientCancellationEmail(appointmentViewModel);
                         break;
 
-                    // Send a cancellation SMS message if the preferred contact method is set to 'Text' or 'Phone number' by the patient when booking the appointment
+                    // Send a cancellation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
                     case ContactMethod.Text:
-                    case ContactMethod.Phone:
                         _smsService.SendPatientCancellationSms(appointmentViewModel);
                         break;
                 }

@@ -34,7 +34,8 @@
                     <td>@doctor.DoctorExt</td>
                     <td>
                         <a asp-controller="Admin" asp-action="GetDoctorAppointments" asp-route-doctorId="@doctor.DoctorId"
-                           class="btn btn-success btn-sm">
+                           class="btn btn-success btn-sm" id="view-appointments-@doctor.DoctorId">
+                            <!-- giving a dynamic id property to this button-->
                             View Scheduled Appointments
                         </a>
                     </td>

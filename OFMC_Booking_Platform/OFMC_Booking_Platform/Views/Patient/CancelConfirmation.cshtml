@@ -11,6 +11,12 @@
             <div class="d-flex justify-content-center mt-4">
                 <form method="post" asp-controller="Healthcare" asp-action="CancelAppointment" asp-route-id="@Model.ActiveAppointment.AppointmentId" class="d-flex gap-3">
                     <button type="submit" class="btn btn-danger">Yes</button>
+
+                    <!-- Putting a spinner beside the 'Yes Cancel' button -->
+                    <div id="spinner" class="spinner-border text-danger spinner-border-sm" role="status" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+
                     <a asp-controller="Healthcare" asp-action="GetAllAppointments" class="btn btn-secondary">No</a>
                 </form>
             </div>
@@ -20,3 +26,23 @@
         </div>
     </div>
 </div>
+
+
+
+<!-- Spinner functionality for the cancel/yes button -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const spinner = document.getElementById("spinner");
+
+        form.addEventListener("submit", function (e) {
+            if (!form.checkValidity()) {
+                // do not show the spinner if the form has validation errors
+                return;
+            }
+
+            // only show the spinner if the form is correctly filled
+            spinner.style.display = "inline-block";
+        });
+    });
+</script>
