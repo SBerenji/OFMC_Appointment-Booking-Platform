@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.Buffers.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OFMC_Test
 {
@@ -96,7 +97,7 @@ namespace OFMC_Test
         public void BookAppointmentProcess()
         {
             //Arrange 
-
+            bool expectedResult = true; //expected final result
             //Attempt to log in patient
             loginPatient();
 
@@ -121,8 +122,13 @@ namespace OFMC_Test
             // Find the first row of the doctors table
             var firstDoctorRow = driver.FindElement(By.CssSelector("table tbody tr:first-child"));
 
+            var selectedDoctorColumn = firstDoctorRow.FindElement(By.TagName("td"));
+
+            string selectedDoctorName = selectedDoctorColumn.Text.Trim();
+
             // Find the Book Appointment button for that first doctor
             var bookButton = firstDoctorRow.FindElement(By.CssSelector("a.btn-success")); // Or "a.btn"
+
 
             //Click on the Book Appointment button
             bookButton.Click();
@@ -170,14 +176,33 @@ namespace OFMC_Test
 
             //Appointments page
             //Find the last element in the table on the appointments page
-            var lastAppointmentRow = driver.FindElement(By.CssSelector("table tbody tr:last-child"));
+            var appointmentTable = driver.FindElements(By.CssSelector("table tbody tr"));
 
-            // Get the time of the latest created appointment
-            var dateTimeCellText = lastAppointmentRow.FindElements(By.TagName("td"))[0].Text.Trim(); // Assumes Date & Time is in the 1st column
+            bool matchFound = false;
+
+            //Loop through each row in the table
+            foreach (var row in appointmentTable)
+            {
+                // collect all columns in the row
+                var columns = row.FindElements(By.TagName("td")); //find the 
+
+                //get the appointment date text
+                var appointmentDateText = columns[0].Text.Trim();
+
+                //get the appointment doctor text
+                var appointmentDoctorText = columns[1].Text.Trim();
+
+                //check if the appointment date and doctor text matches the newly created appointment
+                if (appointmentDateText == selectedTimeSlot && appointmentDoctorText == selectedDoctorName)
+                {
+                    matchFound = true; //if they do then the appointment was sucessfully created
+                    break; //stop this loop
+                }
+            }
 
             //Assert
-            //Check that the latest appointment time matches the newly created appointment time
-            Assert.That(dateTimeCellText, Is.EqualTo(selectedTimeSlot), "Latest appointment does not match the selected time slot.");
+            //Sucessful if the matchFound match the expectedResult
+            Assert.That(matchFound, Is.EqualTo(expectedResult), "Newly created appointment was not found.");
         }
         
         [TearDown]
