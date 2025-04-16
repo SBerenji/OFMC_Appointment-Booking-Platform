@@ -110,7 +110,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
         // Defining an action that removes the appointment of the patient from the database
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost("/admin/cancelAppointment")]
         public async Task<IActionResult> CancelPatientAppointment(int appointmentId)
         {
