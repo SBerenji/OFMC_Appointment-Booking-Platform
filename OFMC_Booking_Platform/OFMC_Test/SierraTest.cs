@@ -97,13 +97,16 @@ namespace OFMC_Test
         {
             //Arrange 
 
+            //Attempt to log in patient
             loginPatient();
 
+            //Attempt to find validation error message
             bool errorText = driver.FindElements(By.ClassName("validation-summary-errors")).Count > 0;
 
+            //If there is an error message then log in was unsucessful, if not then log in suceeded
             if (errorText)
             {
-                registerPatient();
+                registerPatient(); //register the patient
             }
             
             System.Threading.Thread.Sleep(2000);

@@ -57,7 +57,7 @@ namespace OFMC_Booking_Platform.Entities
                 new Availability() { SlotId = 23, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 12, 12, 0, 0), IsBooked = false },
                 new Availability() { SlotId = 24, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 13, 12, 0, 0), IsBooked = false },
                 new Availability() { SlotId = 25, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 24, 12, 0, 0), IsBooked = false },
-                new Availability() { SlotId = 26, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0), IsBooked = false },
+                new Availability() { SlotId = 26, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 15, 14, 0, 0), IsBooked = false },
                 new Availability() { SlotId = 27, DoctorId = 1, SlotDateTime = new DateTime(2025, 8, 16, 12, 0, 0), IsBooked = false }
                 );
 

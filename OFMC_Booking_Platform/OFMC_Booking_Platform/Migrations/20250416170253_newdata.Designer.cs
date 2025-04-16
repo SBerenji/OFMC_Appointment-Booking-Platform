@@ -12,8 +12,8 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    [Migration("20250412210504_Account")]
-    partial class Account
+    [Migration("20250416170253_newdata")]
+    partial class newdata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,6 +199,8 @@ namespace OFMC_Booking_Platform.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("PatientId");
+
                     b.ToTable("Appointment");
                 });
 
@@ -349,6 +351,69 @@ namespace OFMC_Booking_Platform.Migrations
                             DoctorId = 6,
                             IsBooked = false,
                             SlotDateTime = new DateTime(2025, 12, 20, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 19,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 1, 28, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 20,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 21,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 9, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 22,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 1, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 23,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 24,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 13, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 25,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 24, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 26,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 15, 14, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 27,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -585,7 +650,15 @@ namespace OFMC_Booking_Platform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OFMC_Booking_Platform.Entities.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("OFMC_Booking_Platform.Entities.Doctor", b =>

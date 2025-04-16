@@ -28,7 +28,7 @@ namespace OFMC_Booking_Platform.Services
         {
             return await this._healthcareDbContext.Appointment
                 .Include(m => m.Doctor) // Include the related Doctor data
-                .Where(m => m.PatientId == PatientId)
+                .Where(a => a.AppointmentDate > DateTime.Now && a.PatientId == PatientId)
                 .ToListAsync();
         }
 
