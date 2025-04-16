@@ -194,7 +194,7 @@ namespace OFMC_Booking_Platform.Controllers
 
 
                 // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
-                appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
+                appointmentViewModel.ActiveAppointment.Doctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
                 //appointmentViewModel.ActiveDoctor = _healthcareDbContext.Doctor
                 //    .FirstOrDefault(d => d.DoctorId == appointmentViewModel.ActiveAppointment.DoctorId);
 
@@ -302,8 +302,8 @@ namespace OFMC_Booking_Platform.Controllers
 
 
                 // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
-                appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
-
+                //appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
+                appointmentViewModel.ActiveAppointment.Doctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
 
                 // sending email and SMS notification based on contact method
                 switch (appointmentViewModel.ActiveAppointment.ContactMethod)
@@ -462,6 +462,7 @@ namespace OFMC_Booking_Platform.Controllers
 
                 // Get the doctor from the database to populate ActiveDoctor from the AppointmentViewModel
                 appointmentViewModel.ActiveDoctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
+                appointmentViewModel.ActiveAppointment.Doctor = await this._patientService.GetDoctorById(appointmentViewModel.ActiveAppointment.DoctorId);
 
 
 
