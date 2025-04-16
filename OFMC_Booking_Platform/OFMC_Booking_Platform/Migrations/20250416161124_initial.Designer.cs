@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OFMC_Booking_Platform.Entities;
 
@@ -11,9 +12,11 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    partial class HealthcareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250416161124_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -403,7 +406,7 @@ namespace OFMC_Booking_Platform.Migrations
                             SlotId = 26,
                             DoctorId = 1,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 15, 14, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {

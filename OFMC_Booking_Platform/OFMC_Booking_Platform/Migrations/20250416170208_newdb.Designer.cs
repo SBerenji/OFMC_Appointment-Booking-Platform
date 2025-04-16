@@ -12,8 +12,8 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    [Migration("20250412203703_final_migration")]
-    partial class final_migration
+    [Migration("20250416170208_newdb")]
+    partial class newdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -351,6 +351,69 @@ namespace OFMC_Booking_Platform.Migrations
                             DoctorId = 6,
                             IsBooked = false,
                             SlotDateTime = new DateTime(2025, 12, 20, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 19,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 1, 28, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 20,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 21,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 9, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 22,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 1, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 23,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 12, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 24,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 13, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 25,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 24, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 26,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 15, 2, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            SlotId = 27,
+                            DoctorId = 1,
+                            IsBooked = false,
+                            SlotDateTime = new DateTime(2025, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 

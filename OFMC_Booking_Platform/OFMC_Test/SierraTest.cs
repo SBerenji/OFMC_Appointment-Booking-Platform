@@ -5,7 +5,7 @@ using System.Buffers.Text;
 
 namespace OFMC_Test
 {
-    public class Tests
+    public class SierraTest
     {
         private IWebDriver driver;
         private string baseUrl = "http://localhost:5058";
@@ -16,47 +16,106 @@ namespace OFMC_Test
             driver = new ChromeDriver();
         }
 
-        [Test]
-        public void BookAppointmentProcess()
+        private void registerPatient()
         {
-            //Arrange 
-            
+            //Log in process
+            //Go to the patient log in form
+            driver.Navigate().GoToUrl($"{baseUrl}/Patient/Register?");
+
+            //Find the FirsName text box
+            var firstnameInput = driver.FindElement(By.Id("FirstName"));
+            firstnameInput.SendKeys("Test");
+
+            //Find the LastName text box
+            var lastnameInput = driver.FindElement(By.Id("LastName"));
+            lastnameInput.SendKeys("Test");
+
+            //Find the email text box
+            var dateofbirthInput = driver.FindElement(By.Id("DateOfBirth"));
+            dateofbirthInput.SendKeys("1999");
+            dateofbirthInput.SendKeys(Keys.Tab);
+            dateofbirthInput.SendKeys("10-10");
+
+            //Find the password text box
+            var phonenumberInput = driver.FindElement(By.Name("PhoneNumber"));
+            phonenumberInput.SendKeys("111-111-11111");
+
+            //Find the LastName text box
+            var emailInput = driver.FindElement(By.Id("Email"));
+            emailInput.SendKeys("serbe25@gmail.com");
+
+            //Find the email text box
+            var passwordInput = driver.FindElement(By.Id("Password"));
+            passwordInput.SendKeys("NewPassword25!");
+
+            //Find the password text box
+            var confirmpasswordInput = driver.FindElement(By.Id("ConfirmPassword"));
+            confirmpasswordInput.SendKeys("NewPassword25!");
+
+
+            //Find the log in button
+            var registerButton = driver.FindElement(By.XPath("//button[contains(text(), 'Register')]"));
+
+            //Click on the log in button
+            registerButton.Click();
+
+            //Wait for the system to load the page after logging in
+            System.Threading.Thread.Sleep(2000);
+        }
+
+        private void loginPatient()
+        {
             //Log in process
             //Go to the patient log in form
             driver.Navigate().GoToUrl($"{baseUrl}/Login/Patient/Form");
-            
+
             //Find the email text box
             var emailInput = driver.FindElement(By.Id("Email"));
-            
+
             //Find the password text box
             var passwordInput = driver.FindElement(By.Id("Password"));
-            
+
             //Enter the test patient email
-            emailInput.SendKeys("serbe@gmail.com");
+            emailInput.SendKeys("serbe25@gmail.com");
 
             //Enter the test patient password
             passwordInput.SendKeys("NewPassword25!");
 
             //Find the log in button
             var loginButton = driver.FindElement(By.XPath("//button[contains(text(), 'Log In')]"));
-            
+
             //Click on the log in button
             loginButton.Click();
 
             //Wait for the system to load the page after logging in
             System.Threading.Thread.Sleep(2000);
+        }
 
 
+        [Test]
+        public void BookAppointmentProcess()
+        {
+            //Arrange 
+
+            //Attempt to log in patient
+            loginPatient();
+
+            //Attempt to find validation error message
+            bool errorText = driver.FindElements(By.ClassName("validation-summary-errors")).Count > 0;
+
+            //If there is an error message then log in was unsucessful, if not then log in suceeded
+            if (errorText)
+            {
+                registerPatient(); //register the patient
+            }
+            
+            System.Threading.Thread.Sleep(2000);
             //Appointments Page
             //Find the Get An Appointment button
             var getAppointmentButton = driver.FindElement(By.LinkText("Get An Appointment"));
-            
+
             //Click on the get appointment button
             getAppointmentButton.Click();
-
-            //Wait for the system to load the page
-            System.Threading.Thread.Sleep(2000);
-
 
             //Doctors Page
             // Find the first row of the doctors table
@@ -125,6 +184,7 @@ namespace OFMC_Test
         public void TearDown()
         {
             driver.Quit();
+            driver.Dispose();
         }
 
     }

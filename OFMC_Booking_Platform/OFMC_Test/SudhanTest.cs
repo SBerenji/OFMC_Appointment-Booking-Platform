@@ -68,6 +68,7 @@ namespace OFMC_Test
         public void TearDown()
         {
             driver.Quit();
+            driver.Dispose();
         }
     }
 }
