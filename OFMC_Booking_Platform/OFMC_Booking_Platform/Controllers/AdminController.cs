@@ -141,9 +141,8 @@ namespace OFMC_Booking_Platform.Controllers
                         _emailService.SendAdminCancellationEmail(appointmentViewModel);
                         break;
 
-                    // Send a cancellation SMS message if the preferred contact method is set to 'Text' or 'Phone number' by the patient when booking the appointment
+                    // Send a cancellation SMS message if the preferred contact method is set to 'Text' by the patient when booking the appointment
                     case ContactMethod.Text:
-                    case ContactMethod.Phone:
                         _smsService.SendAdminCancellationSms(appointmentViewModel);
                         break;
                 }

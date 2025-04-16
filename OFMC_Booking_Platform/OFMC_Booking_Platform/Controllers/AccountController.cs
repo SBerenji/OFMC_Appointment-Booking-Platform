@@ -105,6 +105,7 @@ namespace OFMC_Booking_Platform.Controllers
                     {
                         UserId = newUser.Id,
                         PatientEmail = newUser.Email,
+                        PatientPhone = newUser.PhoneNumber,
                         FirstName = newUser.FirstName,
                         LastName = newUser.LastName,
                         DOB = newUser.DateOfBirth

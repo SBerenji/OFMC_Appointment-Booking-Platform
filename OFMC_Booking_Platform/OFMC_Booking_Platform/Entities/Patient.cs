@@ -25,6 +25,9 @@ namespace OFMC_Booking_Platform.Entities
         [EmailAddress(ErrorMessage = "Please enter a valid email")] //Error message if invalid email format is entered
         public string? PatientEmail { get; set; } // can get and set the PatientEmail
 
+        public string? PatientPhone { get; set; } // can get and set the phone number of the patient
+
+
     }
 }
 

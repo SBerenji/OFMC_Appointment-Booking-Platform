@@ -20,6 +20,18 @@ namespace OFMC_Test
             driver = new ChromeDriver();
         }
 
+
+        // to make sure everything cleans up and gets disposed after the test is done
+        [TearDown]
+        public void TearDown()
+        {
+            if (driver != null)
+            {
+                driver.Quit();
+                driver.Dispose();
+            }
+        }
+
         [Test]
         public void CancelPatientAppointment_Admin()
         {
@@ -123,7 +135,7 @@ namespace OFMC_Test
 
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Patient Not Found");
+                    Console.WriteLine("Patient Not Found", ex);
                     break;
                 }
 
