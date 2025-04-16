@@ -12,8 +12,8 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    [Migration("20250414195222_nejgiug")]
-    partial class nejgiug
+    [Migration("20250416161124_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

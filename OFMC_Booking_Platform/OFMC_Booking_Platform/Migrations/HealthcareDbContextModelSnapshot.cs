@@ -403,7 +403,7 @@ namespace OFMC_Booking_Platform.Migrations
                             SlotId = 26,
                             DoctorId = 1,
                             IsBooked = false,
-                            SlotDateTime = new DateTime(2025, 8, 15, 12, 0, 0, 0, DateTimeKind.Unspecified)
+                            SlotDateTime = new DateTime(2025, 8, 15, 14, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
