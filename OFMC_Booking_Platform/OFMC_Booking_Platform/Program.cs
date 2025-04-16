@@ -40,7 +40,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.LoginPath = "/Home/Index";
-    options.AccessDeniedPath = "/AccessDenied";
+    options.AccessDeniedPath = "/Home/Index";
 
     // Here we control how long the cookie lives if RememberMe is true.
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
