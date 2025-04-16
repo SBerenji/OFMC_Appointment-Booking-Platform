@@ -12,8 +12,8 @@ using OFMC_Booking_Platform.Entities;
 namespace OFMC_Booking_Platform.Migrations
 {
     [DbContext(typeof(HealthcareDbContext))]
-    [Migration("20250416184341_Sudhan")]
-    partial class Sudhan
+    [Migration("20250416215710_Sudhan_New")]
+    partial class Sudhan_New
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -504,6 +504,9 @@ namespace OFMC_Booking_Platform.Migrations
 
                     b.Property<string>("PatientEmail")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PatientPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

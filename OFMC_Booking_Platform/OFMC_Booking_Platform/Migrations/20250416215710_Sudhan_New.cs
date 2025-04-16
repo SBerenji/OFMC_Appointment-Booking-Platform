@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OFMC_Booking_Platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Sudhan : Migration
+    public partial class Sudhan_New : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -95,7 +95,8 @@ namespace OFMC_Booking_Platform.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PatientEmail = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PatientEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PatientPhone = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
