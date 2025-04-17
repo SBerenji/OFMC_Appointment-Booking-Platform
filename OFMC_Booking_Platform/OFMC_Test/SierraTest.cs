@@ -33,9 +33,9 @@ namespace OFMC_Test
 
             //Find the email text box
             var dateofbirthInput = driver.FindElement(By.Id("DateOfBirth"));
-            dateofbirthInput.SendKeys("1999");
-            dateofbirthInput.SendKeys(Keys.Tab);
-            dateofbirthInput.SendKeys("10-10");
+            dateofbirthInput.SendKeys("10-10-1999");
+            //dateofbirthInput.SendKeys(Keys.Tab);
+            //dateofbirthInput.SendKeys("10-10");
 
             //Find the password text box
             var phonenumberInput = driver.FindElement(By.Name("PhoneNumber"));
@@ -192,8 +192,12 @@ namespace OFMC_Test
                 //get the appointment doctor text
                 var appointmentDoctorText = columns[1].Text.Trim();
 
+                //parse the expected and actual dates into DateTime format to remove inconsistencies
+                DateTime.TryParse(appointmentDateText, out DateTime parsedAppointmentDate);
+                DateTime.TryParse(selectedTimeSlot, out DateTime parsedSelectedSlot);
+
                 //check if the appointment date and doctor text matches the newly created appointment
-                if (appointmentDateText == selectedTimeSlot && appointmentDoctorText == selectedDoctorName)
+                if (parsedAppointmentDate == parsedSelectedSlot && appointmentDoctorText == selectedDoctorName) 
                 {
                     matchFound = true; //if they do then the appointment was sucessfully created
                     break; //stop this loop
