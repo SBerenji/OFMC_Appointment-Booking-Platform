@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
-COPY ["OFMC_Booking_Platform/OFMC_Booking_Platform.csproj", "OFMC_Booking_Platform/"]
+COPY ["OFMC_Booking_Platform/OFMC_Booking_Platform/OFMC_Booking_Platform.csproj", "OFMC_Booking_Platform/"]
 RUN dotnet restore "OFMC_Booking_Platform/OFMC_Booking_Platform.csproj"
 COPY . .
 WORKDIR "/src/OFMC_Booking_Platform"
