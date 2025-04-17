@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <Compile Remove="TestScripts\**" />
+    <Compile Remove="Views\Emails\**" />
     <Content Remove="TestScripts\**" />
+    <Content Remove="Views\Emails\**" />
     <EmbeddedResource Remove="TestScripts\**" />
+    <EmbeddedResource Remove="Views\Emails\**" />
     <None Remove="TestScripts\**" />
+    <None Remove="Views\Emails\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,7 +40,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Account\" />
-    <Folder Include="Views\Emails\" />
   </ItemGroup>
 
 </Project>
