@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OFMC_Booking_Platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Sudhan_New : Migration
+    public partial class final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
