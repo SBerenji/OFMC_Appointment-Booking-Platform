@@ -20,7 +20,7 @@ jobs:
 
       # Step 3: Build Docker image (adjust path if needed)
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/ofmc-booking-platform:latest -f OFMC_Booking_Platform/Dockerfile .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/ofmc-booking-platform:latest -f OFMC_Booking_Platform/OFMC_Booking_Platform/Dockerfile .
 
       # Step 4: Push Docker image to Docker Hub
       - name: Push Docker image
