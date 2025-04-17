@@ -123,6 +123,11 @@ namespace OFMC_Booking_Platform.Controllers
                 {
                     foreach (var error in result.Errors)
                     {
+                        if (error.Code == "DuplicateUserName")
+                        {
+                            continue;
+                        };
+
                         ModelState.AddModelError("", error.Description);
                     }
                 }
@@ -155,8 +160,6 @@ namespace OFMC_Booking_Platform.Controllers
                     {
                         await this._userManager.AddToRoleAsync(user, "Admin");
                     };
-
-                    Console.WriteLine("Redirecting Admin....");
 
                     return RedirectToAction("GetDoctorsList", "Admin");
                 }
