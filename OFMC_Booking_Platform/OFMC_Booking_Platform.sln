@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OFMC_Booking_Platform", "OF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OFMC_Test", "OFMC_Test\OFMC_Test.csproj", "{157D16A9-3CF4-4117-B5F2-E62AA98FC5A5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{CB4BDEBA-F623-4325-9E11-219E58493149}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A1D77D28-8C94-4191-9491-580DDE3D3C7F}"
+	ProjectSection(SolutionItems) = preProject
+		Build_Push_Deploy_Docker_Image.yaml = Build_Push_Deploy_Docker_Image.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1D77D28-8C94-4191-9491-580DDE3D3C7F} = {CB4BDEBA-F623-4325-9E11-219E58493149}
 	EndGlobalSection
 EndGlobal
