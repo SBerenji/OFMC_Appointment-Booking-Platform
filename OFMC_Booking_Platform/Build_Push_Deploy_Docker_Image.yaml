@@ -1,0 +1,31 @@
+name: Build, Push and Deploy to Render
+
+on:
+  push:
+    branches:
+      - main  # or change to your deployment branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Login to Docker Hub
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Step 3: Build Docker image (adjust path if needed)
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/ofmc-booking-platform:latest -f OFMC_Booking_Platform/OFMC_Booking_Platform/Dockerfile .
+
+      # Step 4: Push Docker image to Docker Hub
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/ofmc-booking-platform:latest
+
+      # Step 5: Trigger Render deploy hook
+      - name: Trigger Render Deploy Hook
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
