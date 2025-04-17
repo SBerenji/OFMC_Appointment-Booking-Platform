@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace OFMC_Test
 {
-    public class RescheduleAppointmentTest
+    public class HangTest
     {
         private IWebDriver driver;
         private WebDriverWait wait;
@@ -88,8 +88,9 @@ namespace OFMC_Test
             // ========== Arrange ==========
             LoginAsPatient();
 
-            // Get all rows in the appointment table BEFORE cancellation
-            var initialRows = driver.FindElements(By.CssSelector("table tbody tr")).Count;
+            // Get all unique appointment detail (e.g., doctor name or datetime) for the first appointment
+            var initialRow = driver.FindElement(By.CssSelector("table tbody tr"));
+            var appointmentIdentifier = initialRow.FindElements(By.TagName("td"))[0].Text.Trim(); // Date & Time cell
 
             // Ensure we have at least one appointment to cancel
             var cancelLink = wait.Until(d => d.FindElements(By.LinkText("Cancel")).FirstOrDefault());
@@ -110,11 +111,15 @@ namespace OFMC_Test
             wait.Until(d => d.Url.Contains("/appointments"));
 
             // ========== Assert ==========
-            // Count how many rows (appointments) are left
-            var finalRows = driver.FindElements(By.CssSelector("table tbody tr")).Count;
+            // Wait and ensure the canceled appointment (by its unique date/time) is not present anymore
+            bool appointmentGone = wait.Until(d =>
+            {
+                var rows = d.FindElements(By.CssSelector("table tbody tr"));
+                return rows.All(r => !r.Text.Contains(appointmentIdentifier));
+            });
 
             // Ensure an appointment was actually removed
-            Assert.That(finalRows, Is.EqualTo(initialRows - 1), $"Expected {initialRows - 1} rows after cancellation, but found {finalRows}.");
+            Assert.That(appointmentGone, Is.True, "Canceled appointment still appears in the list.");
         }
 
 
