@@ -155,6 +155,67 @@ using (var scope = app.Services.CreateScope())
             }
         }
     }
+
+
+
+
+
+    var patientUsers = config.GetSection("PatientUsers").Get<List<PatientUserConfig>>();
+
+    foreach (var patient in patientUsers)
+    {
+        if (string.IsNullOrWhiteSpace(patient.PatientEmail))
+            continue;
+
+        var existingUser = await userManager.FindByEmailAsync(patient.PatientEmail);
+        if (existingUser == null)
+        {
+            var user = new User
+            {
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                UserName = patient.PatientEmail,
+                Email = patient.PatientEmail,
+                EmailConfirmed = true,
+                DateOfBirth = string.IsNullOrWhiteSpace(patient.DOB) ? DateTime.Today : DateTime.Parse(patient.DOB).Date,
+                PhoneNumber = patient.PatientPhone
+            };
+
+            // Default password for seeded patients.
+            var password = "Patient@123";
+
+            var result = await userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, "Patient");
+
+                var dbContext = scope.ServiceProvider.GetRequiredService<HealthcareDbContext>();
+
+                dbContext.Patient.Add(new Patient
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DOB = user.DateOfBirth,
+                    PatientEmail = user.Email,
+                    PatientPhone = user.PhoneNumber
+                });
+
+                await dbContext.SaveChangesAsync();
+
+                Console.WriteLine($"Seeded patient user: {patient.PatientEmail}");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"Error creating patient user {patient.PatientEmail}: {error.Description}");
+                }
+            }
+        }
+    }
+
 }
 
 
