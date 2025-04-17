@@ -42,6 +42,26 @@ body {
     border-color: #198754 !important; /* Bootstrap success green */
     box-shadow: none;
 }
+
+
+.form-check-input {
+    border: 2px solid #999 !important; /* Thicker and darker */
+    width: 18px;
+    height: 18px;
+}
+
+.form-check-input:checked {
+    background-color: #198754; /* Bootstrap green fill */
+    border-color: #198754;
+}
+
+
+.form-check-input:hover,
+.form-check-input:focus {
+    border-color: #198754;
+    box-shadow: 0 0 2px #198754;
+}
+
 /* End of CSS by Sudhan */
 
 .home-custom-btn {
